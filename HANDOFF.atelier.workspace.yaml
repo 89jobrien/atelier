@@ -88,7 +88,8 @@ items:
 - id: atelier-6
   name: validate-new-scripts-next-session
   priority: P1
-  status: open
+  status: done
+  completed: 2026-04-05
   title: Validate generate-diagrams.nu and sync-sqlite.sh in a fresh session
   description: |
     Both scripts were written and smoke-tested this session but the plugin was reinstalled
@@ -111,6 +112,12 @@ items:
   - skills/handoff/scripts/sync-sqlite.sh
 
 log:
+- date: 2026-04-05
+  summary: >
+    Session-start validation — generate-diagrams.nu and sync-sqlite.sh confirmed in plugin cache
+    (0.7.0); nu script runs clean against real HANDOFF; SQLite query returns all 6 items; atelier-6 done.
+  commits:
+  - (pending)
 - date: 2026-04-05
   summary: Added references/ and scripts/ to all skills; generate-diagrams.nu; sync-sqlite.sh; rtk hook v3
   commits:
