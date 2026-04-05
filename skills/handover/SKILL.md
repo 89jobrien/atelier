@@ -97,8 +97,17 @@ If the script fails (non-zero exit or not found), fall back to generating diagra
 using the rules below. Record the fallback in a comment at the top of the Diagrams section:
 `<!-- generate-diagrams.py unavailable — diagrams generated inline -->`.
 
-The script emits four diagram types (dependency, sprint, coverage, blocked). Each is a fenced
-Mermaid block with a `### <Name>` header. Only non-empty diagrams are included in the output.
+The script emits up to five diagram types, each gated on having sufficient data:
+
+| Name | Type | Gate |
+|------|------|------|
+| `dependency` | flowchart TD | items with inferred deps |
+| `burn` | pie | ≥3 items |
+| `velocity` | timeline | ≥2 log entries |
+| `hotspots` | xychart-beta bar | ≥3 items with files, ≥3 distinct files |
+| `blocked` | flowchart TD | blocked items exist |
+
+Each is a fenced Mermaid block with a `### <Name>` header. Only non-empty diagrams are included.
 
 ### Fallback: Inline Diagram Rules
 
@@ -112,83 +121,47 @@ Apply these rules to **every node label**:
 - No parentheses (use square brackets or quotes if needed)
 - Abbreviate freely: `Auth Policy Gate` → `Auth Gate`
 
-#### 1. Item Flow (flowchart LR)
-
-Show items grouped by priority flowing into status buckets.
+#### 1. Burn (pie) — gate: ≥3 items
 
 ```
-flowchart LR
-  P0 --> open1[Auth Gate]
-  P1 --> open2[CI Enforce]
-  P1 --> open3[Bench Toggles]
-  open1 --> S_open[Open]
-  open2 --> S_open
-  open3 --> S_open
-  vz[VZ Bug] --> S_blocked[Blocked]
+pie title Work Distribution
+  "done" : 7
+  "open" : 3
+  "blocked" : 1
 ```
 
-#### 2. Item Status (stateDiagram-v2)
+Skip slices with count 0.
 
-Show the status state machine with item counts in each state.
+#### 2. Velocity (timeline) — gate: ≥2 log entries
 
-```
-stateDiagram-v2
-  [*] --> Open
-  Open --> Done
-  Open --> Blocked
-  Open --> Parked
-  Done --> [*]
-  Blocked --> Open
-  Parked --> Open
-```
-
-Annotate transitions with counts if >1 item. Example: `Open --> Done : 3 items`.
-
-#### 3. Session Timeline (sequenceDiagram)
-
-Map log entries as a timeline. Use date as the actor label on the left, one `Note over` per
-entry.
+Group log entries by date, sorted chronologically. Truncate summaries to 50 chars.
 
 ```
-sequenceDiagram
-  participant Apr03 as 2026-04-03
-  participant Apr02 as 2026-04-02
-  Note over Apr03: Bench timeout fix
-  Note over Apr02: Tier 1 wins
+timeline
+  2026-04-03 : Renamed plugin joe-dev to atelier
+  2026-04-05 : Wired generate-diagrams.py
+             : Created CLAUDE.md
 ```
 
-Only emit this diagram when `log` has ≥2 entries.
+#### 3. Hotspots (xychart-beta bar) — gate: ≥3 items with files, ≥3 distinct files
 
-#### 4. Item-File ER (erDiagram)
-
-Show which items reference which files. Only emit when items have non-empty `files` arrays.
+Top 8 files by item reference count. Use basename; disambiguate duplicates with parent dir.
 
 ```
-erDiagram
-  ITEM ||--o{ FILE : references
-  ITEM {
-    string id
-    string priority
-    string status
-  }
-  FILE {
-    string path
-  }
+xychart-beta
+  title "File Hotspots"
+  x-axis ["handler.rs", "ci.yml", "todos.rs"]
+  y-axis "Items" 0 --> 5
+  bar [5, 3, 2]
 ```
 
-Follow with a compact table of item→file mappings (max 10 rows; truncate with `... N more`).
+#### 4. Dependency (flowchart TD) — gate: items with inferred deps
 
-#### 5. Priority/Status Matrix (quadrantChart) — optional
+Only emit items that have deps or are depended upon.
 
-Emit only when there are ≥6 items. Map priority (P0=high, P2=low) vs status
-(open/blocked=active, done/parked=inactive).
+#### 5. Blocked chain (flowchart TD) — gate: blocked items exist
 
-```
-quadrantChart
-  title Items by Priority and Status
-  x-axis Low Priority --> High Priority
-  y-axis Inactive --> Active
-```
+Show blocked items and their root blockers.
 
 ## Reading State
 
