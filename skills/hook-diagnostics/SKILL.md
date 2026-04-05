@@ -22,7 +22,7 @@ Active hooks come from two sources:
    - post-edit-cargo-check.nu (PostToolUse/Edit|Write)
    - sync_memory_to_vault.py (PostToolUse/Edit|Write)
 
-2. **Plugin hooks** (joe-secrets SessionStart):
+2. **Plugin hooks** (sanctum SessionStart):
    - op-resolver-startup.sh (SessionStart)
 
 ## Checking Hook Status

@@ -2,13 +2,13 @@
 name: handon
 description: This skill should be used when the user asks to "start session", "orient to work",
   "what's outstanding", "read handoff", "what was I working on", "pick up where I left off",
-  or at session start when the joe-secrets SessionStart hook fires to surface outstanding work.
+  or at session start when the sanctum SessionStart hook fires to surface outstanding work.
 ---
 
 # handon
 
 Read `HANDOFF.yaml` files across active repos, triage items by priority, and present
-outstanding work at session start. Invoked automatically by the `joe-secrets` SessionStart hook.
+outstanding work at session start. Invoked automatically by the `sanctum` SessionStart hook.
 
 ## Active Repos to Scan
 
@@ -75,5 +75,5 @@ If no HANDOFF.yaml files are found:
 
 ## Automatic Invocation
 
-This skill is invoked automatically by the `joe-secrets` SessionStart hook after op-resolver
+This skill is invoked automatically by the `sanctum` SessionStart hook after op-resolver
 completes. No manual trigger needed at session start — it fires on every new Claude session.

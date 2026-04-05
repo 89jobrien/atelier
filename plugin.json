@@ -1,5 +1,5 @@
 {
-  "name": "joe-dev",
+  "name": "atelier",
   "version": "0.1.0",
   "description": "Personal dev workflow plugin — Rust gates, code review, CI, git safety, multi-repo pulse",
   "author": {

@@ -1,4 +1,4 @@
-# joe-dev
+# atelier
 
 Personal dev workflow plugin — Rust gates, code review, CI, git safety,
 multi-repo pulse.
@@ -8,8 +8,8 @@ multi-repo pulse.
 Install both plugins for full session-start experience:
 
 ```bash
-claude --plugin-dir ~/.claude/plugins/joe-dev
-claude --plugin-dir ~/.claude/plugins/joe-secrets
+claude --plugin-dir ~/.claude/plugins/atelier
+claude --plugin-dir ~/.claude/plugins/sanctum
 ```
 
 ## Skills
@@ -41,6 +41,6 @@ claude --plugin-dir ~/.claude/plugins/joe-secrets
 
 - `cargo-gate` runs `cargo xtask pre-commit` first — the xtask gate always
   takes priority.
-- [joe-secrets](https://github.com/89jobrien/joe-secrets) must also be installed for the session-start op-resolver +
+- `sanctum` must also be installed for the session-start op-resolver +
   handon chain.
 - All agents are thin wrappers; devkit must be installed and accessible.
