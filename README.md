@@ -5,11 +5,14 @@ multi-repo pulse.
 
 ## Installation
 
-Install both plugins for full session-start experience:
+```bash
+claude plugin add github:89jobrien/atelier
+```
+
+Requires `sanctum` for the session-start hook chain:
 
 ```bash
-claude --plugin-dir ~/.claude/plugins/atelier
-claude --plugin-dir ~/.claude/plugins/sanctum
+claude plugin add github:89jobrien/sanctum
 ```
 
 ## Skills
