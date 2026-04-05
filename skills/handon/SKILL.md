@@ -1,85 +1,153 @@
 ---
 name: handon
-description: This skill should be used when the user asks to "start session", "orient to work",
-  "what's outstanding", "read handoff", "what was I working on", "pick up where I left off",
-  or at session start when the sanctum SessionStart hook fires to surface outstanding work.
+description: Use at the start of a session to orient to outstanding work — scans for
+  HANDOFF.yaml (or HANDOFF.md) files, triages items by priority, and acts according to
+  risk level without asking for approval on P1/P2 work.
 ---
 
-# handon
+# handon — Session-Start Handoff Reader
 
-Read `HANDOFF.yaml` files across active repos, triage items by priority, and present
-outstanding work at session start. Invoked automatically by the `sanctum` SessionStart hook.
+## Overview
 
-## Active Repos to Scan
+Scan the current directory tree for handoff files, parse items by priority, and act:
 
-Scan for HANDOFF.yaml in:
+| Priority | Action |
+|----------|--------|
+| P0 | Validate current state immediately. Report to user. Ask before touching anything. |
+| P1 | Execute autonomously. Stop only if scope expands or something unexpected happens. |
+| P2 | Delegate to subagents. Cap at 5 concurrent. |
 
-```
-~/dev/minibox
-~/dev/maestro
-~/dev/devloop
-~/dev/doob
-~/dev/devkit
-~/dev/magi
-~/dev/mcpipe
-~/dev/braid
-```
+## Steps
 
-Also check the current working directory repo.
-
-## Reading HANDOFF.yaml
-
-For each repo with a HANDOFF.yaml:
+### 1. Find handoff file
 
 ```bash
-for f in ~/dev/*/HANDOFF.yaml; do [ -f "$f" ] && echo "$f"; done
+handoff-detect          # returns path if exists, expected path + exit 2 if not
 ```
 
-Read each file and extract: `in_progress`, `next_session`, `blockers`, `updated`.
+- Exit 0 → file exists, path printed — read it
+- Exit 2 → file missing, expected path printed — offer to create via `/atelier:handoff`
+- Exit 1 → not in a git repo — report and stop
 
-## Triage and Presentation
+If `handoff-detect` is not on PATH, fall back to globbing the repo root for `HANDOFF.*.yaml`.
 
-Sort by:
-1. `blockers` non-empty — surface first
-2. `in_progress` items with `priority: high`
-3. `next_session` items
-4. `in_progress` items with other priorities
+If invoked from a workspace root (e.g. `~/dev`) with no `.git`, sweep subdirs for
+`HANDOFF.*.*.yaml` files instead.
 
-Present as a brief orientation table:
+If only a legacy `HANDOFF.md` exists at repo root, read it as freeform. Do not convert unless
+asked.
+
+### 2. Read .ctx/HANDOFF.state.yaml
+
+After locating the HANDOFF file, read `.ctx/HANDOFF.state.yaml` from the same repo root if it
+exists. Extract `branch`, `build`, `tests`, `notes` and surface them in the triage header:
 
 ```
-SESSION ORIENTATION — 2026-04-03
+## Handoff Triage — <path/to/repo>
 
-BLOCKERS
-  minibox: SSH key rotation required before VPS integration test
-
-HIGH PRIORITY
-  minibox [feat/gc-images]: Integration test for GC under load
-    Note: Needs VPS — blocked until SSH rotated
-
-NEXT UP
-  minibox: SSH key rotation → VPS test → open PR
-  devloop: Review snapshot failures from yesterday's nextest run
-
-LAST UPDATED
-  minibox: 3 hours ago
-  devloop: 1 day ago
+Branch: <branch> | Build: <build> | Tests: <tests>
+<notes if non-null>
 ```
 
-## When No HANDOFF.yaml Exists
+If the file is absent, omit the state line rather than guessing.
 
-If no HANDOFF.yaml files are found:
+### 3. Pull latest state from doob
 
-> "No HANDOFF.yaml found in active repos. Starting fresh session.
-> Run `handoff` at session end to capture state for next time."
+Before parsing the local file, sync doob → HANDOFF.yaml to pick up any status changes made
+outside this session:
 
-If this appears to be the first session (no HANDOFF files anywhere in active repos and no
-prior session log), also suggest onboarding:
+```bash
+doob handoff sync --file <path-to-HANDOFF.yaml>
+```
 
-> "Looks like a first session. Run `/atelier:onboard` to walk through installation
-> verification and smoke tests."
+If `doob` is not on PATH, skip and continue with the local file as-is.
 
-## Automatic Invocation
+### 4. Review on wake
 
-This skill is invoked automatically by the `sanctum` SessionStart hook after op-resolver
-completes. No manual trigger needed at session start — it fires on every new Claude session.
+Before triaging by priority, scan all items for unreviewed `human-edit` entries — any `extra`
+entry with `type: human-edit` and no `reviewed` field (or `reviewed` is absent).
+
+Surface these first, regardless of item priority:
+
+```
+## Review on Wake
+
+- [id] "[title]" — human edited `<field>` → `<value>` on <date>
+  <note if present>
+```
+
+Do not act on these items automatically. Present to user and wait for acknowledgement before
+proceeding to P0 triage. After the user acknowledges, note which items were reviewed —
+`/atelier:handoff` will stamp `reviewed: <today>` on those entries at session end.
+
+### 5. Parse items
+
+From `HANDOFF.yaml`: read `items` list directly. Filter to `status: open` or `status: blocked`.
+Items with a `doob_uuid` are tracked in doob — their status is authoritative from the sync above.
+
+From `HANDOFF.md`: read the "Known Gaps", "Next Up", "Parked", or "Remaining Work" sections.
+Infer priority:
+- P0: "broken", "fails", "blocked", "urgent", "security"
+- P1: specific file + known fix mentioned
+- P2: everything else that's safe
+
+### 6. Triage P0 items
+
+For each P0:
+1. Run relevant validation (`cargo check`, `git status`, test run)
+2. Report finding to user with current state
+3. Ask for go/no-go before acting
+
+Do not proceed to P1/P2 until all P0s are acknowledged by user.
+
+### 7. Execute P1 items
+
+Work through each open P1 without asking. Stop and surface to user when:
+- Scope expands beyond what the item described
+- Tests fail unexpectedly (not the known failure)
+- More than 3 files need changing beyond what was described
+- Any destructive operation would be needed
+
+### 8. Delegate P2 items
+
+Dispatch one subagent per P2 item (cap 5 concurrent). Each subagent must:
+- Receive explicit `--allowedTools` list
+- Verify `git status` is clean before starting
+- Commit its own changes
+- Report back with result
+
+### 9. Report and update
+
+After all work:
+
+```
+## Handoff Triage — <path/to/repo>
+
+P0:
+  - [id] [name] "[title]" → [state found] → [action / question]
+
+P1:
+  - [id] [name] "[title]" → done | blocked: <reason>
+
+P2:
+  - [id] [name] "[title]" → delegated | skipped: <reason>
+```
+
+Then update `HANDOFF.yaml`:
+- Mark done items `status: done`, add `completed: <today>`
+- Add `log` entry for this session (one-liner, prepend to list)
+- Run `doob handoff sync --file <path>` to push status changes to doob
+- Commit: `git add HANDOFF.yaml && git commit -m "docs: update handoff"`
+
+## Edge Cases
+
+**No handoff file found:** Report "No HANDOFF.yaml found in `<path>`." Offer to create one via
+`/atelier:handoff`.
+
+**HANDOFF.md only:** Read it, triage as normal, note at end: "Consider migrating to HANDOFF.yaml
+for structured triage."
+
+**All items done or parked:** Report clean state, no action needed.
+
+**Blocked item:** Do not attempt. Report the blocker to user verbatim from the `description`
+field.
