@@ -3,7 +3,7 @@
 
 MANIFEST=".claude-plugin/plugin.json"
 PLUGIN_STAGED=$(git diff --cached --name-only \
-  | grep -E '^(\.claude-plugin/|skills/|agents/|hooks/)' \
+  | grep -E '^(\.claude-plugin/|skills/|agents/|hooks/|README\.md)' \
   | grep -v "^$MANIFEST$" || true)
 
 if [ -n "$PLUGIN_STAGED" ] && [ -f "$MANIFEST" ]; then
@@ -14,7 +14,7 @@ if [ -n "$PLUGIN_STAGED" ] && [ -f "$MANIFEST" ]; then
 
   # minor bump if any new files are being added; patch bump if only modifications
   NEW_FILES=$(git diff --cached --name-only --diff-filter=A \
-    | grep -E '^(\.claude-plugin/|skills/|agents/|hooks/)' || true)
+    | grep -E '^(\.claude-plugin/|skills/|agents/|hooks/|README\.md)' || true)
   if [ -n "$NEW_FILES" ]; then
     next="$major.$((minor + 1)).0"
   else
