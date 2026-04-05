@@ -85,11 +85,15 @@ Keep prose minimal. No headers longer than 3 words. No HTML. No emoji.
 
 ## Mermaid Diagrams
 
-Run `skills/handover/scripts/generate-diagrams.py` from the repo root to produce all diagrams:
+Locate and run `generate-diagrams.py` by resolving the script path at runtime:
 
 ```bash
-uv run skills/handover/scripts/generate-diagrams.py --handoff <path-to-HANDOFF.yaml>
+SCRIPT=$(ls $HOME/.claude/plugins/cache/local/atelier/*/skills/handover/scripts/generate-diagrams.py \
+  2>/dev/null | sort -V | tail -1)
+uv run "$SCRIPT" --handoff <path-to-HANDOFF.yaml>
 ```
+
+This picks the highest installed version automatically. If no match is found, fall back to inline generation.
 
 Embed the full stdout output verbatim into the Diagrams section of `.ctx/HANDOVER.md`.
 
