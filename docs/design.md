@@ -149,8 +149,8 @@ Both plugins must be installed together for the full session-start experience
 (joe-secrets hook chains into joe-dev handon):
 
 ```bash
-cc --plugin-dir ~/.claude/plugins/joe-dev
-cc --plugin-dir ~/.claude/plugins/joe-secrets
+claude --plugin-dir ~/.claude/plugins/joe-dev
+claude --plugin-dir ~/.claude/plugins/joe-secrets
 ```
 
 ---
