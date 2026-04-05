@@ -16,14 +16,14 @@ claude --plugin-dir ~/.claude/plugins/joe-secrets
 
 | Skill | Trigger Phrases |
 |-------|----------------|
-| cargo-gate | "run gates", "validate rust", "pre-commit check" |
-| sentinel-autofixer | "apply review fixes", "fix sentinel suggestions", "auto-fix review" |
-| hook-diagnostics | "show hook status", "hook failures", "what hooks ran" |
+| cargo-gate | "gatecargo", "run gates", "validate rust" |
+| sentinel-autofixer | "autofix", "apply review fixes", "fix sentinel suggestions" |
+| hook-diagnostics | "failhook", "show hook status", "what hooks ran" |
 | git-guard | "safe to commit", "check merge strategy", "commit safely" |
 | ci-assist | "edit workflow", "fix CI", "check cross-compile", "verify binary" |
 | project-pulse | "end session", "capture state", "session summary" |
 | handoff | "write handoff", "end of session", "capture handoff" |
-| handon | "start session", "orient to work", "what's outstanding" |
+| handon | "handon", "start session", "what's outstanding" |
 
 ## Agents
 
