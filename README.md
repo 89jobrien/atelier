@@ -20,7 +20,7 @@ claude plugin add github:89jobrien/sanctum
 | Skill | Trigger Phrases |
 |-------|----------------|
 | onboard | "onboard me", "walk me through setup", `/atelier:onboard` |
-| cargo-gate | "gatecargo", "run gates", "validate rust" |
+| cargo-gate | "run gates", "validate rust", "pre-commit check" |
 | sentinel-autofixer | "autofix", "apply review fixes", "fix sentinel suggestions" |
 | hook-diagnostics | "failhook", "show hook status", "what hooks ran" |
 | git-guard | "safe to commit", "check merge strategy", "commit safely" |
@@ -28,6 +28,7 @@ claude plugin add github:89jobrien/sanctum
 | project-pulse | "end session", "capture state", "session summary" |
 | handoff | "write handoff", "end of session", "capture handoff" |
 | handon | "handon", "start session", "what's outstanding" |
+| handover | "visualize the handoff", "show handoff", "generate diagrams" |
 
 ## Agents
 
@@ -43,8 +44,9 @@ claude plugin add github:89jobrien/sanctum
 
 ## Notes
 
-- `cargo-gate` runs `cargo xtask pre-commit` first — the xtask gate always
-  takes priority.
-- `sanctum` must also be installed for the session-start op-resolver +
-  handon chain.
+- `cargo-gate` runs `cargo xtask pre-commit` first — the xtask gate always takes priority.
+- `sanctum` must also be installed for the session-start op-resolver + handon chain.
 - All agents are thin wrappers; devkit must be installed and accessible.
+- Skills with scripts (`handoff`, `handover`) resolve them from the plugin cache at runtime via
+  version-sorted glob — bumping `version` in `plugin.json` + `just reinstall` is sufficient to
+  pick up new scripts.
