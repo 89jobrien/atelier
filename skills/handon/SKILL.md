@@ -1,6 +1,7 @@
 ---
 name: handon
-description: Use at the start of a session to orient to outstanding work — scans for
+description:
+  Use at the start of a session to orient to outstanding work — scans for
   HANDOFF.yaml (or HANDOFF.md) files, triages items by priority, and acts according to
   risk level without asking for approval on P1/P2 work.
 ---
@@ -11,11 +12,11 @@ description: Use at the start of a session to orient to outstanding work — sca
 
 Scan the current directory tree for handoff files, parse items by priority, and act:
 
-| Priority | Action |
-|----------|--------|
-| P0 | Validate current state immediately. Report to user. Ask before touching anything. |
-| P1 | Execute autonomously. Stop only if scope expands or something unexpected happens. |
-| P2 | Delegate to subagents. Cap at 5 concurrent. |
+| Priority | Action                                                                            |
+| -------- | --------------------------------------------------------------------------------- |
+| P0       | Validate current state immediately. Report to user. Ask before touching anything. |
+| P1       | Execute autonomously. Stop only if scope expands or something unexpected happens. |
+| P2       | Delegate to subagents. Cap at 5 concurrent.                                       |
 
 ## Steps
 
@@ -93,6 +94,7 @@ Apply any SQLite overrides from step 3 before triaging.
 
 From `HANDOFF.md`: read the "Known Gaps", "Next Up", "Parked", or "Remaining Work" sections.
 Infer priority:
+
 - P0: "broken", "fails", "blocked", "urgent", "security"
 - P1: specific file + known fix mentioned
 - P2: everything else that's safe
@@ -100,6 +102,7 @@ Infer priority:
 ### 6. Triage P0 items
 
 For each P0:
+
 1. Run relevant validation (`cargo check`, `git status`, test run)
 2. Report finding to user with current state
 3. Ask for go/no-go before acting
@@ -109,6 +112,7 @@ Do not proceed to P1/P2 until all P0s are acknowledged by user.
 ### 7. Execute P1 items
 
 Work through each open P1 without asking. Stop and surface to user when:
+
 - Scope expands beyond what the item described
 - Tests fail unexpectedly (not the known failure)
 - More than 3 files need changing beyond what was described
@@ -117,6 +121,7 @@ Work through each open P1 without asking. Stop and surface to user when:
 ### 8. Delegate P2 items
 
 Dispatch one subagent per P2 item (cap 5 concurrent). Each subagent must:
+
 - Receive explicit `--allowedTools` list
 - Verify `git status` is clean before starting
 - Commit its own changes
@@ -140,6 +145,7 @@ P2:
 ```
 
 Then update `HANDOFF.yaml`:
+
 - Mark done items `status: done`, add `completed: <today>`
 - Add `log` entry for this session (one-liner, prepend to list)
 - Upsert all items to SQLite via `sync-sqlite.sh` (see handoff skill step 6)

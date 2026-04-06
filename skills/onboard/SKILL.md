@@ -1,6 +1,7 @@
 ---
 name: onboard
-description: Use when a user says "onboard me", "how do I set up atelier", "what does this plugin
+description:
+  Use when a user says "onboard me", "how do I set up atelier", "what does this plugin
   do", "walk me through setup", or invokes /atelier:onboard. Also suggested by handon when neither
   atelier nor sanctum appear to have been verified in a live session before.
 ---
@@ -11,12 +12,12 @@ description: Use when a user says "onboard me", "how do I set up atelier", "what
 
 Four local plugins form the full dev workflow:
 
-| Plugin | Purpose |
-|--------|---------|
-| **atelier** | Rust gates, code review, CI safety, multi-repo pulse, session handoffs |
-| **sanctum** | 1Password auth validation, `.envrc` chain tracing, `op://` conflict detection |
-| **hand** | Standalone session handoff toolkit (HANDOFF.yaml + SQLite) |
-| **orca-strait** | Parallel TDD sub-agent orchestrator for Rust workspaces |
+| Plugin          | Purpose                                                                       |
+| --------------- | ----------------------------------------------------------------------------- |
+| **atelier**     | Rust gates, code review, CI safety, multi-repo pulse, session handoffs        |
+| **sanctum**     | 1Password auth validation, `.envrc` chain tracing, `op://` conflict detection |
+| **hand**        | Standalone session handoff toolkit (HANDOFF.yaml + SQLite)                   |
+| **orca-strait** | Parallel TDD sub-agent orchestrator for Rust workspaces                       |
 
 atelier + sanctum are the core pair. hand and orca-strait are opt-in.
 
@@ -52,6 +53,7 @@ cd ~/dev/orca-strait && just init
 ```
 
 Each `just init` will:
+
 1. Set `core.hooksPath = .githooks` — post-commit auto-reinstalls plugin on source changes
 2. Register the local marketplace at `~/.claude/plugins/local-marketplace`
 3. Prompt for approval if required tools are missing
@@ -61,16 +63,16 @@ Each `just init` will:
 
 In a new Claude session, trigger each skill to confirm it loads:
 
-| Skill | Test phrase |
-|-------|-------------|
-| atelier:onboard | `/atelier:onboard` |
-| atelier:handon | "what's outstanding" |
-| atelier:cargo-gate | "run gates" |
-| atelier:hook-diagnostics | "show hook status" |
-| atelier:git-guard | "safe to commit" |
-| sanctum:op-resolver | `/sanctum:op-resolver` |
-| hand:on | `/hand:on` |
-| orca-strait | `/orca-strait --dry-run` |
+| Skill                    | Test phrase              |
+| ------------------------ | ------------------------ |
+| atelier:onboard          | `/atelier:onboard`       |
+| atelier:handon           | "what's outstanding"     |
+| atelier:cargo-gate       | "run gates"              |
+| atelier:hook-diagnostics | "show hook status"       |
+| atelier:git-guard        | "safe to commit"         |
+| sanctum:op-resolver      | `/sanctum:op-resolver`   |
+| hand:on                  | `/hand:on`               |
+| orca-strait              | `/orca-strait --dry-run` |
 
 Expected: Claude responds using skill content, not a generic answer.
 
@@ -84,6 +86,7 @@ Direnv chain: N .envrc file(s) found, N op:// refs.
 ```
 
 If absent:
+
 ```bash
 ls -l ~/dev/sanctum/hooks/
 claude plugin list | grep sanctum
@@ -105,6 +108,7 @@ Every plugin repo has `.githooks/post-commit` that auto-reinstalls the plugin wh
 `core.hooksPath = .githooks` — set by `just init`.
 
 To reinstall manually without a full init:
+
 ```bash
 cd ~/dev/<plugin> && just reinstall
 ```
@@ -112,6 +116,7 @@ cd ~/dev/<plugin> && just reinstall
 ## Onboarding Complete
 
 > At every new session:
+>
 > 1. sanctum validates 1Password auth and traces your `.envrc` chain
 > 2. atelier:handon surfaces outstanding HANDOFF items across active repos
 >

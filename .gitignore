@@ -1,4 +1,18 @@
-.claude/*.local.md
+# Atelier gitignore
 .ctx/
+.claude/*.local.md
+.claude/settings.local.json
 __pycache__/
+**/__pycache__/
+*.py[cod]
+.pytest_cache/
 skills/*/scripts/test_*.py
+.DS_Store
+**/.DS_Store
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+*.log
+*.tmp

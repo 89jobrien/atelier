@@ -11,18 +11,18 @@ Every node label in every diagram must satisfy all of:
 - **No colons in node IDs** — use camelCase or underscores for IDs, colons only in edge labels
 
 Good: `Auth Gate`, `CI Enforce`, `Bench Fix`
-Bad:  `Add daemon-side policy gate for mounts`, `Fix phased-deployment CI — HTTP 403 on gh run list`
+Bad: `Add daemon-side policy gate for mounts`, `Fix phased-deployment CI — HTTP 403 on gh run list`
 
 ### Abbreviation guide
 
-| Full title pattern | Abbreviated |
-|---|---|
-| "Add X for Y" | "Add X" |
-| "Fix X — reason" | "Fix X" |
-| "Improve X coverage" | "X Coverage" |
-| "Enforce X with CI" | "X Enforce" |
-| "VZ.framework VZErrorInternal..." | "VZ Bug" |
-| "Tier N Linux-only..." | "Linux Tests" |
+| Full title pattern                | Abbreviated   |
+| --------------------------------- | ------------- |
+| "Add X for Y"                     | "Add X"       |
+| "Fix X — reason"                  | "Fix X"       |
+| "Improve X coverage"              | "X Coverage"  |
+| "Enforce X with CI"               | "X Enforce"   |
+| "VZ.framework VZErrorInternal..." | "VZ Bug"      |
+| "Tier N Linux-only..."            | "Linux Tests" |
 
 ## Flowchart Patterns
 
@@ -127,16 +127,17 @@ erDiagram
 
 Follow with a compact mapping table:
 
-| Item | Files |
-|---|---|
+| Item      | Files                                   |
+| --------- | --------------------------------------- |
 | minibox-1 | .github/workflows/phased-deployment.yml |
-| minibox-4 | crates/daemonbox/src/handler.rs |
+| minibox-4 | crates/daemonbox/src/handler.rs         |
 
 Truncate at 10 rows; add `... N more items` if needed.
 
 ## Quadrant Chart Patterns
 
 Only emit when ≥6 items exist. Map:
+
 - X axis: P2 (low) → P0 (high)
 - Y axis: done/parked (inactive) → open/blocked (active)
 
@@ -166,6 +167,7 @@ Map statuses: open → y=0.6–1.0, blocked → y=0.3–0.5, done/parked → y=0
 flowchart LR
   A[Add daemon-side policy gate for mounts and privileged containers] --> Open
 ```
+
 Fix: `A[Auth Gate] --> Open`
 
 ### Mistake: Newline in label
@@ -174,6 +176,7 @@ Fix: `A[Auth Gate] --> Open`
 flowchart LR
   A["Auth\nGate"] --> Open
 ```
+
 Fix: `A[Auth Gate] --> Open`
 
 ### Mistake: Colon in node ID
@@ -182,6 +185,7 @@ Fix: `A[Auth Gate] --> Open`
 flowchart LR
   minibox-1[Auth Gate] --> Open
 ```
+
 Fix: `minibox1[Auth Gate] --> Open` (use camelCase or underscore IDs)
 
 ### Mistake: Parentheses in label
@@ -190,4 +194,5 @@ Fix: `minibox1[Auth Gate] --> Open` (use camelCase or underscore IDs)
 flowchart LR
   A[Auth (Gate)] --> Open
 ```
+
 Fix: `A[Auth Gate] --> Open`

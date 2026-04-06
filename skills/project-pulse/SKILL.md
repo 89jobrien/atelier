@@ -1,6 +1,7 @@
 ---
 name: project-pulse
-description: This skill should be used when the user asks to "end session", "capture state",
+description:
+  This skill should be used when the user asks to "end session", "capture state",
   "session summary", "what changed this session", "summarize repos", "write session notes",
   or wants to capture multi-repo state at the end of a work session.
 ---
@@ -46,6 +47,7 @@ type: project
 **Last commit:** abc1234 fix: clean up GC loop
 
 **Open PRs:**
+
 - #42 feat: image GC (draft)
 
 **Uncommitted changes:** none
@@ -62,10 +64,10 @@ $HOME/Documents/Obsidian Vault/Daily Notes/YYYY-MM-DD.md
 ```markdown
 ## Session Pulse
 
-| Repo | Branch | Commits | Status |
-|------|--------|---------|--------|
-| minibox | feat/gc-images | +3 | clean |
-| devloop | main | 0 | clean |
+| Repo    | Branch         | Commits | Status |
+| ------- | -------------- | ------- | ------ |
+| minibox | feat/gc-images | +3      | clean  |
+| devloop | main           | 0       | clean  |
 ```
 
 If the daily note doesn't exist, create it with the pulse section.

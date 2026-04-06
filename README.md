@@ -17,30 +17,30 @@ claude plugin add github:89jobrien/sanctum
 
 ## Skills
 
-| Skill | Trigger Phrases |
-|-------|----------------|
-| onboard | "onboard me", "walk me through setup", `/atelier:onboard` |
-| cargo-gate | "run gates", "validate rust", "pre-commit check" |
-| sentinel-autofixer | "autofix", "apply review fixes", "fix sentinel suggestions" |
-| hook-diagnostics | "failhook", "show hook status", "what hooks ran" |
-| git-guard | "safe to commit", "check merge strategy", "commit safely" |
-| ci-assist | "edit workflow", "fix CI", "check cross-compile", "verify binary" |
-| project-pulse | "end session", "capture state", "session summary" |
-| handoff | "write handoff", "end of session", "capture handoff" |
-| handon | "handon", "start session", "what's outstanding" |
-| handover | "visualize the handoff", "show handoff", "generate diagrams" |
+| Skill              | Trigger Phrases                                                   |
+| ------------------ | ----------------------------------------------------------------- |
+| onboard            | "onboard me", "walk me through setup", `/atelier:onboard`         |
+| cargo-gate         | "run gates", "validate rust", "pre-commit check"                  |
+| sentinel-autofixer | "autofix", "apply review fixes", "fix sentinel suggestions"       |
+| hook-diagnostics   | "failhook", "show hook status", "what hooks ran"                  |
+| git-guard          | "safe to commit", "check merge strategy", "commit safely"         |
+| ci-assist          | "edit workflow", "fix CI", "check cross-compile", "verify binary" |
+| project-pulse      | "end session", "capture state", "session summary"                 |
+| handoff            | "write handoff", "end of session", "capture handoff"              |
+| handon             | "handon", "start session", "what's outstanding"                   |
+| handover           | "visualize the handoff", "show handoff", "generate diagrams"      |
 
 ## Agents
 
 > Currently delegates agent logic to devkit and likely always will
 
-| Agent | Purpose |
-|-------|---------|
-| sentinel | Structured code review |
-| forge | Dev companion — design, debug, refactor |
-| herald | Cross-repo synthesis → Obsidian |
-| conductor | devloop → doob → devkit pipeline |
-| oxidizer | Rust-specific review: clippy, unsafe, edition 2024 |
+| Agent     | Purpose                                            |
+| --------- | -------------------------------------------------- |
+| sentinel  | Structured code review                             |
+| forge     | Dev companion — design, debug, refactor            |
+| herald    | Cross-repo synthesis → Obsidian                    |
+| conductor | devloop → doob → devkit pipeline                   |
+| oxidizer  | Rust-specific review: clippy, unsafe, edition 2024 |
 
 ## Notes
 

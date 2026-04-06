@@ -35,9 +35,9 @@ doob        fix/sync        1 new commit           0
 
 ## Output Paths
 
-| Destination | Path |
-|---|---|
-| Memory file | `~/.claude/projects/-Users-joe-dev-<repo>/memory/session_YYYY-MM-DD.md` |
-| Obsidian daily note | `~/Documents/Obsidian Vault/Daily Notes/YYYY-MM-DD.md` |
+| Destination         | Path                                                                    |
+| ------------------- | ----------------------------------------------------------------------- |
+| Memory file         | `~/.claude/projects/-Users-joe-dev-<repo>/memory/session_YYYY-MM-DD.md` |
+| Obsidian daily note | `~/Documents/Obsidian Vault/Daily Notes/YYYY-MM-DD.md`                  |
 
 Append under a `## Session Pulse` heading in the daily note. Create the note if absent.
