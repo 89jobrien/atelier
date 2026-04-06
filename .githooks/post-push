@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Reinstall the atelier plugin after push so the installed version matches the pushed hash.
 
-PLUGIN_FILES=$(git diff --name-only HEAD~1 HEAD 2>/dev/null \
+REMOTE_BEFORE=$(git rev-parse "@{u}@{1}" 2>/dev/null || git rev-parse HEAD~2 2>/dev/null || true)
+PLUGIN_FILES=$(git diff --name-only "$REMOTE_BEFORE" HEAD 2>/dev/null \
   | grep -E '^(\.claude-plugin/|skills/|agents/|hooks/)' || true)
 
 if [ -z "$PLUGIN_FILES" ]; then
