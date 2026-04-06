@@ -109,15 +109,34 @@ items:
     permissionDecision deny + exit 0 is not honored by Claude Code. Accepted behavior.
   files:
   - /Users/joe/.claude/hooks/nu/pre/pre-tool-course-correct.nu
+- id: atelier-8
+  name: extract-coursers-repo
+  priority: P1
+  status: done
+  completed: 2026-04-05
+  title: Extract course-correction pipeline into standalone coursers repo
+  description: |
+    Extracted pre-tool-course-correct and post-tool-track-failures logic from nu scripts
+    into a standalone Rust binary (coursers). Binary owns all rule-matching and failure-
+    tracking logic; nu hooks become thin one-liners: `echo $raw | ^coursers pre/post`.
+    Committed and pushed to https://github.com/89jobrien/coursers. obfsck allowlist updated
+    to include the coursers GitHub URL. Global pre-commit hook updated to exclude Cargo.lock.
+  files:
+  - /Users/joe/dev/coursers/src/main.rs
+  - /Users/joe/dev/coursers/src/rules.rs
+  - /Users/joe/dev/coursers/src/state.rs
+  - /Users/joe/.claude/hooks/nu/pre/pre-tool-course-correct.nu
+  - /Users/joe/.claude/hooks/nu/post/post-tool-track-failures.nu
+  - /Users/joe/.config/git/hooks/pre-commit
+  - /Users/joe/.config/obfsck/allowlist
 
 log:
 - date: 2026-04-05
   summary: >
-    atelier-7 done — fixed load_rules double-parse bug; rules now match correctly; deny via
-    exit 2 confirmed working; "hook blocking error" label is Claude Code's expected UX for
-    hook-driven blocks. All hooks clean.
+    atelier-8 done — coursers Rust binary extracted from nu hooks; initial commit pushed to
+    GitHub; obfsck allowlist updated; Cargo.lock excluded from global pre-commit scan.
   commits:
-  - (pending)
+  - ca7ffdc
 - date: 2026-04-05
   summary: >
     E2E session — validated version bump flow (0.7.0→0.8.3); fixed pre-commit hook to include
