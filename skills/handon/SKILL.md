@@ -41,13 +41,15 @@ asked.
 ### 2. Read .ctx/HANDOFF.state.yaml
 
 After locating the HANDOFF file, read `.ctx/HANDOFF.state.yaml` from the same repo root if it
-exists. Extract `branch`, `build`, `tests`, `notes` and surface them in the triage header:
+exists. Extract `branch`, `build`, `tests`, `notes`, `touched_files` and surface them in the
+triage header:
 
 ```
 ## Handoff Triage — <path/to/repo>
 
 Branch: <branch> | Build: <build> | Tests: <tests>
 <notes if non-null>
+Recently touched: <touched_files as comma-separated list, omit if absent>
 ```
 
 If the file is absent, omit the state line rather than guessing.

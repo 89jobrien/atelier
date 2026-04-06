@@ -70,6 +70,15 @@ Emit clean YAML. No anchors, no aliases.
 
 Create `.ctx/` if it does not exist. Overwrite completely with current state from step 1.
 
+Populate `touched_files` from files changed in commits since the session started. If session
+boundary is unclear, use files changed since the last log entry date in HANDOFF.yaml:
+
+```bash
+git diff --name-only $(git log --format="%H" --since="<last-log-date>" | tail -1)..HEAD
+```
+
+Omit the field if empty.
+
 ### 6. Sync to SQLite
 
 Resolve and run `sync-sqlite.sh` from the plugin cache:

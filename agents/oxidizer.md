@@ -31,7 +31,7 @@ Clippy explanation and resolution is an oxidizer use case.
 </example>
 
 model: inherit
-color: red
+color: green
 tools: ["Read", "Grep", "Glob", "Bash"]
 ---
 

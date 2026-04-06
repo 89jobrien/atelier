@@ -22,7 +22,7 @@ Cross-project narrative summarization triggers herald.
 </example>
 
 model: inherit
-color: cyan
+color: green
 tools: ["Read", "Write", "Bash"]
 ---
 

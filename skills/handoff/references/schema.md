@@ -81,6 +81,7 @@ branch: <git branch>
 build: clean | failing | unknown
 tests: "<N passing>" | "failing: N" | "unknown"
 notes: <one-line or null>
+touched_files: [<path>] # files modified this session; omit if empty
 ```
 
 Extend freely with project-specific facts (e.g. `rust_edition`, `open_prs`, `last_deploy`).
