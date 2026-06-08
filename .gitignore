@@ -1,5 +1,8 @@
 # Atelier gitignore
-.ctx/
+.ctx/*
+!.ctx/HANDOFF.*.yaml
+!.ctx/*.config.toml.example
+.ctx/HANDOFF.*.state.yaml
 .kgx/
 .claude/*.local.md
 .claude/settings.local.json
