@@ -4,8 +4,20 @@
 #
 # Usage: generate-ctx-docs --handoff <path> [--state <path>] [--ctx <dir>]
 
+# Try SCRIPT_DIR-relative first (dev checkout), then bazaar cache
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 HELPERS_DIR="$SCRIPT_DIR/../skills/handoff/helpers"
+
+if [ ! -d "$HELPERS_DIR" ]; then
+    # Fallback: find the most recently modified bazaar cache dir
+    CACHE_BASE="$HOME/.claude/plugins/cache/bazaar/atelier"
+    HELPERS_DIR="$(ls -td "$CACHE_BASE"/*/skills/handoff/helpers 2>/dev/null | head -1)"
+fi
+
+if [ -z "$HELPERS_DIR" ] || [ ! -d "$HELPERS_DIR" ]; then
+    echo "error: cannot find handoff helpers (checked dev checkout and bazaar cache)" >&2
+    exit 1
+fi
 
 if command -v nu >/dev/null 2>&1; then
     exec nu "$HELPERS_DIR/generate-ctx-docs.nu" "$@"

@@ -38,7 +38,7 @@ are callable directly: `handoff-detect`, `handoff-init`, `handoff-db`, `handoff-
 
 | Skill                | Trigger examples                                                     |
 | -------------------- | -------------------------------------------------------------------- |
-| `cap`                | "/cap", "commit and push", "ship it", "save progress"               |
+| `cap`                | "/cap", "commit and push", "ship it", "save progress"                |
 | `cargo-gate`         | "run gates", "validate rust", "pre-commit check"                     |
 | `ci-assist`          | "edit workflow", "fix CI", "check cross-compile"                     |
 | `eod`                | "/eod", "end of day", "wrap up session"                              |
@@ -59,32 +59,33 @@ are callable directly: `handoff-detect`, `handoff-init`, `handoff-db`, `handoff-
 
 All agents are thin wrappers — domain logic lives in `devkit`. Do not embed behavior here.
 
-| Agent       | Purpose                                                      |
-| ----------- | ------------------------------------------------------------ |
-| `sentinel`  | Structured code review (hexagonal arch, Rust/Go conventions) |
-| `forge`     | Primary dev companion: design, debug, refactor               |
-| `herald`    | Cross-repo activity → Obsidian daily note                    |
-| `conductor` | devloop → doob → devkit workflow pipeline                    |
-| `oxidizer`  | Rust-specific review (clippy, unsafe, edition 2024)          |
-| `minion`    | General-purpose parallel worker for independent subtasks     |
-| `maxion`    | Structured task planner for complex or ambiguous items       |
-| `midion`    | Parallel worker dispatched by handon for backlog items       |
+| Agent       | Purpose                                                           |
+| ----------- | ----------------------------------------------------------------- |
+| `sentinel`  | Structured code review (hexagonal arch, Rust/Go conventions)      |
+| `forge`     | Primary dev companion: design, debug, refactor                    |
+| `herald`    | Cross-repo activity → Obsidian daily note                         |
+| `conductor` | devloop → doob → devkit workflow pipeline                         |
+| `oxidizer`  | Rust-specific review (clippy, unsafe, edition 2024)               |
+| `minion`    | General-purpose parallel worker for independent subtasks          |
+| `maxion`    | Structured task planner for complex or ambiguous items            |
+| `midion`    | Parallel worker dispatched by handon for backlog items            |
 | `workshop`  | Full-suite test agent — verifies skill loading and plugin surface |
 
 **Agent Permissions:**
 
-- `forge` and `conductor` have `permissionMode: acceptEdits` — they can write/edit files without
-  prompting. All other agents operate read-only and prompt before file changes.
+- `workshop` and `minion` have `permissionMode: acceptEdits` — they can write/edit files without
+  prompting. `oxidizer` has `permissionMode: default`. All other agents omit the field and
+  prompt before file changes.
 
 ## Handoff System
 
 Three-file model per project:
 
-| File                                              | Committed | Purpose                                        |
-| ------------------------------------------------- | --------- | ---------------------------------------------- |
-| `.ctx/HANDOFF.<name>.<base>.yaml` (in `.ctx/`)   | YES       | Source of truth — tasks, log, metadata         |
-| `.ctx/HANDOFF.<name>.<base>.state.yaml`           | NO        | Project snapshot (branch, build status, tests) |
-| `.ctx/HANDOFF.md`                                 | NO        | Rendered human-readable reference              |
+| File                                           | Committed | Purpose                                        |
+| ---------------------------------------------- | --------- | ---------------------------------------------- |
+| `.ctx/HANDOFF.<name>.<base>.yaml` (in `.ctx/`) | YES       | Source of truth — tasks, log, metadata         |
+| `.ctx/HANDOFF.<name>.<base>.state.yaml`        | NO        | Project snapshot (branch, build status, tests) |
+| `.ctx/HANDOFF.md`                              | NO        | Rendered human-readable reference              |
 
 `<name>` is derived from the nearest `Cargo.toml`/`pyproject.toml`/`go.mod`; `<base>` is the
 repo root directory name. `handoff-init` creates stubs and manages the `.gitignore` block on

@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
-# Delegate to global pre-commit hook
+# Delegate to global pre-commit hook (guard against recursion)
+
+[ -n "$_GLOBAL_PRECOMMIT" ] && exit 0
+export _GLOBAL_PRECOMMIT=1
 
 GLOBAL_HOOK="$HOME/.config/git/hooks/pre-commit"
 if [ -x "$GLOBAL_HOOK" ]; then
