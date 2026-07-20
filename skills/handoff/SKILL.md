@@ -210,6 +210,12 @@ Populate `log` from recent commits. Leave `items` empty or with one P1 if there'
 open next step. Do not backfill closed work into `items`, but do preserve durable `log`
 history. Write `.ctx/HANDOFF.<name>.<base>.state.yaml` from actual build/test output.
 
+Never add an item whose only content is "you have uncommitted changes" (e.g. "Uncommitted
+Work", "Uncommitted changes"). Dirty git state is transient and already visible via
+`git status` — it is not a task. This pattern was recurring across every session with a
+dirty tree and syncing into doob as duplicate todos (see doob audit 2026-07-19/20). Only
+add a P1 item if there's a concrete, actionable next step beyond "commit your changes."
+
 Place the new HANDOFF file at `.ctx/HANDOFF.<name>.<base>.yaml` where `<name>` is the
 package/crate name from the nearest manifest and `<base>` is the repo root dir name.
 Use `handoff-detect --name` to get the correct filename.
