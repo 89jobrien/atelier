@@ -1,0 +1,29 @@
+[package]
+name = "atelier-cli"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.88"
+publish = false
+
+[lib]
+name = "atelier"
+
+[[bin]]
+name = "atelier"
+path = "src/main.rs"
+
+[dependencies]
+clap = { version = "4.6.6", features = ["derive"] }
+rusqlite = { version = "0.40.2", features = ["bundled"] }
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = "1.0.151"
+serde_yaml_ng = "0.10.0"
+sha2 = "0.11.0"
+thiserror = "2.0.20"
+time = { version = "0.3.55", features = ["formatting", "local-offset"] }
+toml = "1.1.4"
+walkdir = "2.5.0"
+
+[dev-dependencies]
+assert_cmd = "2.2.2"
+tempfile = "3.27.0"
