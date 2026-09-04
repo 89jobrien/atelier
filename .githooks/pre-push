@@ -5,7 +5,11 @@ MANIFEST=".claude-plugin/plugin.json"
 [ -f "$MANIFEST" ] || exit 0
 
 REMOTE_BEFORE=$(git rev-parse "@{u}" 2>/dev/null || echo "")
-HASH=$(git rev-parse --short HEAD)
+SOURCE_HEAD=HEAD
+case "$(git log -1 --format=%s)" in
+  "chore: set plugin version to "*) SOURCE_HEAD=HEAD^ ;;
+esac
+HASH=$(git rev-parse --short "$SOURCE_HEAD")
 current=$(grep '"version"' "$MANIFEST" | head -1 | sed 's/.*"version": *"\([^"]*\)".*/\1/')
 
 # Stamp version
