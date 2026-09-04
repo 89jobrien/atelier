@@ -1,5 +1,24 @@
 # hooklings CLI — Implementation Plan
 
+**Status:** Historical draft; not an active Atelier implementation plan.
+
+## Contents
+
+- [File Map](#file-map)
+- [Task 1: Bootstrap repo and workspace](#task-1-bootstrap-repo-and-workspace)
+- [Task 2: Config module](#task-2-config-module-layered-toml)
+- [Task 3: Config property tests](#task-3-config-property-tests)
+- [Task 4: Emit module](#task-4-emit-module-json--markdown-table)
+- [Task 5: Environment handlers](#task-5-env-handlers-detect_shell-check_tools-check_pwd)
+- [Task 6: Remaining handlers](#task-6-op-ssh-handoff-doob-handlers-stubs-for-opssh-sqlite-for-handoffdoob)
+- [Task 7: Conformance tests](#task-7-conformance-tests--all-handlers-registered)
+- [Task 8: CLI subcommands](#task-8-wire-mainrs-cli-subcommands)
+- [Task 9: Pipeline and README](#task-9-default-pipeline--readme)
+- [Task 10: Fuzz targets](#task-10-fuzz-targets)
+- [Task 11: Clippy and final gate](#task-11-clippy--final-gate)
+- [Task 12: Atelier integration](#task-12-update-atelier-sessionstart-hook)
+- [Self-Review Checklist](#self-review-checklist-spec-coverage)
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development
 > (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use
 > checkbox (`- [ ]`) syntax for tracking.
@@ -23,35 +42,36 @@ markdown table to stdout. Config is layered TOML: global XDG + per-project overr
 
 ## File Map
 
-| Path | Action | Purpose |
-|---|---|---|
-| `hooklings/Cargo.toml` | Create | Workspace manifest |
-| `hooklings/crates/hooklings/Cargo.toml` | Create | Crate manifest |
-| `hooklings/crates/hooklings/src/main.rs` | Create | CLI entry — subcommands |
-| `hooklings/crates/hooklings/src/config.rs` | Create | Layered TOML config |
-| `hooklings/crates/hooklings/src/emit.rs` | Create | JSON + markdown table rendering |
-| `hooklings/crates/hooklings/src/handlers/mod.rs` | Create | Handler registration |
-| `hooklings/crates/hooklings/src/handlers/env.rs` | Create | `detect_shell`, `check_tools`, `check_pwd` |
-| `hooklings/crates/hooklings/src/handlers/op.rs` | Create | `op::auth_check` |
-| `hooklings/crates/hooklings/src/handlers/ssh.rs` | Create | `ssh::reachable` |
-| `hooklings/crates/hooklings/src/handlers/handoff.rs` | Create | `handoff::pending` |
-| `hooklings/crates/hooklings/src/handlers/doob.rs` | Create | `doob::pending` |
-| `hooklings/crates/hooklings/tests/config.rs` | Create | Config merge unit tests + proptests |
-| `hooklings/crates/hooklings/tests/emit.rs` | Create | Emit unit tests |
-| `hooklings/crates/hooklings/tests/handlers_env.rs` | Create | env handler tests |
-| `hooklings/crates/hooklings/tests/handlers_sqlite.rs` | Create | handoff/doob handler tests |
-| `hooklings/crates/hooklings/tests/conformance.rs` | Create | All handlers registered conformance |
-| `hooklings/fuzz/Cargo.toml` | Create | Fuzz workspace |
-| `hooklings/fuzz/fuzz_targets/config_parse.rs` | Create | Fuzz TOML config parsing |
-| `hooklings/fuzz/fuzz_targets/emit_table.rs` | Create | Fuzz markdown emit |
-| `hooklings/pipelines/default.crux` | Create | Default preflight pipeline |
-| `hooklings/README.md` | Create | Usage docs |
+| Path                                                  | Action | Purpose                                    |
+| ----------------------------------------------------- | ------ | ------------------------------------------ |
+| `hooklings/Cargo.toml`                                | Create | Workspace manifest                         |
+| `hooklings/crates/hooklings/Cargo.toml`               | Create | Crate manifest                             |
+| `hooklings/crates/hooklings/src/main.rs`              | Create | CLI entry — subcommands                    |
+| `hooklings/crates/hooklings/src/config.rs`            | Create | Layered TOML config                        |
+| `hooklings/crates/hooklings/src/emit.rs`              | Create | JSON + markdown table rendering            |
+| `hooklings/crates/hooklings/src/handlers/mod.rs`      | Create | Handler registration                       |
+| `hooklings/crates/hooklings/src/handlers/env.rs`      | Create | `detect_shell`, `check_tools`, `check_pwd` |
+| `hooklings/crates/hooklings/src/handlers/op.rs`       | Create | `op::auth_check`                           |
+| `hooklings/crates/hooklings/src/handlers/ssh.rs`      | Create | `ssh::reachable`                           |
+| `hooklings/crates/hooklings/src/handlers/handoff.rs`  | Create | `handoff::pending`                         |
+| `hooklings/crates/hooklings/src/handlers/doob.rs`     | Create | `doob::pending`                            |
+| `hooklings/crates/hooklings/tests/config.rs`          | Create | Config merge unit tests + proptests        |
+| `hooklings/crates/hooklings/tests/emit.rs`            | Create | Emit unit tests                            |
+| `hooklings/crates/hooklings/tests/handlers_env.rs`    | Create | env handler tests                          |
+| `hooklings/crates/hooklings/tests/handlers_sqlite.rs` | Create | handoff/doob handler tests                 |
+| `hooklings/crates/hooklings/tests/conformance.rs`     | Create | All handlers registered conformance        |
+| `hooklings/fuzz/Cargo.toml`                           | Create | Fuzz workspace                             |
+| `hooklings/fuzz/fuzz_targets/config_parse.rs`         | Create | Fuzz TOML config parsing                   |
+| `hooklings/fuzz/fuzz_targets/emit_table.rs`           | Create | Fuzz markdown emit                         |
+| `hooklings/pipelines/default.crux`                    | Create | Default preflight pipeline                 |
+| `hooklings/README.md`                                 | Create | Usage docs                                 |
 
 ---
 
 ## Task 1: Bootstrap repo and workspace
 
 **Files:**
+
 - Create: `hooklings/Cargo.toml`
 - Create: `hooklings/crates/hooklings/Cargo.toml`
 - Create: `hooklings/crates/hooklings/src/main.rs`
@@ -167,6 +187,7 @@ git push -u origin main
 ## Task 2: Config module (layered TOML)
 
 **Files:**
+
 - Create: `crates/hooklings/src/config.rs`
 - Create: `crates/hooklings/tests/config.rs`
 
@@ -556,6 +577,7 @@ git push
 ## Task 3: Config property tests
 
 **Files:**
+
 - Modify: `crates/hooklings/tests/config.rs`
 
 - [ ] **Step 1: Append property tests**
@@ -646,6 +668,7 @@ git push
 ## Task 4: Emit module (JSON + markdown table)
 
 **Files:**
+
 - Create: `crates/hooklings/src/emit.rs`
 - Create: `crates/hooklings/tests/emit.rs`
 
@@ -904,6 +927,7 @@ git push
 ## Task 5: env handlers (`detect_shell`, `check_tools`, `check_pwd`)
 
 **Files:**
+
 - Create: `crates/hooklings/src/handlers/mod.rs`
 - Create: `crates/hooklings/src/handlers/env.rs`
 - Create: `crates/hooklings/tests/handlers_env.rs`
@@ -1137,6 +1161,7 @@ git push
 ## Task 6: op, ssh, handoff, doob handlers (stubs for op/ssh, sqlite for handoff/doob)
 
 **Files:**
+
 - Create: `crates/hooklings/src/handlers/op.rs`
 - Create: `crates/hooklings/src/handlers/ssh.rs`
 - Create: `crates/hooklings/src/handlers/handoff.rs`
@@ -1501,6 +1526,7 @@ git push
 ## Task 7: Conformance tests — all handlers registered
 
 **Files:**
+
 - Create: `crates/hooklings/tests/conformance.rs`
 
 - [ ] **Step 1: Write conformance tests**
@@ -1578,6 +1604,7 @@ git push
 ## Task 8: Wire `main.rs` CLI subcommands
 
 **Files:**
+
 - Modify: `crates/hooklings/src/main.rs`
 
 - [ ] **Step 1: Implement full CLI**
@@ -1759,6 +1786,7 @@ git push
 ## Task 9: Default pipeline + README
 
 **Files:**
+
 - Create: `hooklings/pipelines/default.crux`
 - Create: `hooklings/README.md`
 
@@ -1805,7 +1833,7 @@ steps:
 
 Create `README.md`:
 
-```markdown
+````markdown
 # hooklings
 
 YAML-driven developer preflight checks via [crux](https://github.com/89jobrien/crux) pipelines.
@@ -1815,6 +1843,7 @@ YAML-driven developer preflight checks via [crux](https://github.com/89jobrien/c
 ```bash
 cargo install --path crates/hooklings
 ```
+````
 
 ## Usage
 
@@ -1857,7 +1886,8 @@ default = ".hooklings/ci.crux"
 ## atelier Integration
 
 atelier's SessionStart hook calls `hooklings preflight --emit both` when hooklings is on PATH.
-```
+
+````
 
 - [ ] **Step 3: Commit**
 
@@ -1866,13 +1896,14 @@ cd /Users/joe/dev/hooklings
 git add pipelines/ README.md
 git commit -m "docs: default pipeline and README"
 git push
-```
+````
 
 ---
 
 ## Task 10: Fuzz targets
 
 **Files:**
+
 - Create: `hooklings/fuzz/Cargo.toml`
 - Create: `hooklings/fuzz/fuzz_targets/config_parse.rs`
 - Create: `hooklings/fuzz/fuzz_targets/emit_table.rs`
@@ -2021,6 +2052,7 @@ git push
 ## Task 12: Update atelier SessionStart hook
 
 **Files:**
+
 - Modify: `~/.claude/hooks/nu/session/session-start.nu`
 
 - [ ] **Step 1: Update the hook**

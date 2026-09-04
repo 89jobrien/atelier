@@ -1,7 +1,9 @@
 # hooklings — Design Spec
 
 **Date:** 2026-04-22
-**Status:** Draft
+**Status:** Historical draft; not implemented by the current Atelier runtime
+
+> Present-tense integration statements below describe the proposed design, not current behavior.
 
 ---
 

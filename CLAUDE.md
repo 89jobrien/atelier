@@ -5,7 +5,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## What This Is
 
 **Atelier** is a Claude Code plugin — a collection of skills and agents for personal dev workflow automation.
-It is not a compiled application. There is no build step; everything is markdown and YAML.
+It also contains the staged Rust `atelier-cli` runtime. Plugin content remains Markdown and YAML,
+while `Cargo.toml`, `src/`, and `tests/` implement and verify the native command surface.
 
 Plugin version: auto-managed (git-hash based) | Installed via the bazaar marketplace.
 
@@ -16,60 +17,78 @@ just init        # One-time setup: wire git hooks, verify tools, install plugin
 just reinstall   # Reinstall plugin without re-running full init
 ```
 
-The post-commit hook auto-reinstalls the plugin when `.claude-plugin/`, `skills/`, `agents/`, or `hooks/`
-change — no manual step needed after edits.
+The pre-push hook stamps the manifest version and reinstalls the plugin when plugin sources changed.
+The post-commit hook is intentionally a no-op.
 
 ## Architecture
 
 ```
 atelier/
-├── .claude-plugin/plugin.json   # Plugin manifest (name, version, skills, agents)
-├── skills/                      # 12 skills — procedural markdown guides for Claude
-├── agents/                      # 5 agents — thin wrappers that delegate to devkit
-├── bin/                         # handoff-detect, handoff-init, handoff-db, handoff-reconcile, migrate-handoff
-├── docs/design.md               # Authoritative design spec
+├── .claude-plugin/plugin.json   # Plugin metadata
+├── skills/                      # 27 procedural workflow skills
+├── agents/                      # 10 agent definitions
+├── bin/                         # 8 legacy commands and compatibility utilities
+├── src/                         # Native atelier library and CLI parser
+├── tests/                       # Rust CLI integration tests
+├── docs/designs/                # Current architectural designs
+├── docs/plans/                  # Current implementation plans
+├── docs/design.md               # Historical plugin-suite design
 └── justfile                     # Setup automation
 ```
 
-`bin/` is added to PATH automatically by Claude Code when the plugin is installed. Scripts there
-are callable directly: `handoff-detect`, `handoff-init`, `handoff-db`, `handoff-reconcile`, `migrate-handoff`.
+`bin/` is added to PATH automatically by Claude Code when the plugin is installed. Its current
+commands are `generate-ctx-docs`, `handoff-db`, `handoff-detect`, `handoff-init`,
+`handoff-reconcile`, `infer-json-schema.jq`, `migrate-handoff`, and `sync-codex`.
 
 ### Skills
 
 | Skill                | Trigger examples                                                     |
 | -------------------- | -------------------------------------------------------------------- |
+| `ai-review`          | "review AI changes", "audit generated code"                          |
 | `cap`                | "/cap", "commit and push", "ship it", "save progress"                |
 | `cargo-gate`         | "run gates", "validate rust", "pre-commit check"                     |
 | `ci-assist`          | "edit workflow", "fix CI", "check cross-compile"                     |
+| `cleanup`            | "clean merged branches", "prune worktrees"                           |
+| `commit-msg`         | "write commit message", "summarize staged changes"                   |
 | `eod`                | "/eod", "end of day", "wrap up session"                              |
 | `git-guard`          | "safe to commit", "check merge strategy"                             |
+| `harbor-adapter`     | "adapt Harbor workflow", "translate Harbor tasks"                    |
 | `handoff`            | "write handoff", "end of session"                                    |
 | `handon`             | "start session", "orient to work", "what's outstanding"              |
 | `handdown`           | "write back analysis", "annotate handoffs", "persist handup context" |
 | `handover`           | "visualize the handoff", "show handoff"                              |
 | `handup`             | "survey all projects", "what's open across repos"                    |
+| `herald`             | "cross-project summary", "write daily note"                          |
 | `hook-diagnostics`   | "show hook status", "what hooks ran"                                 |
+| `insights-audit`     | "validate insights report", "audit the report"                       |
+| `merge`              | "merge this branch", "integrate changes"                             |
 | `minion`             | "dispatch subagent", "run in parallel", "fast subtask"               |
-| `onboard-atelier`    | "onboard me", "how do I set up atelier"                              |
+| `onboard`            | "onboard me", "how do I set up atelier"                              |
 | `project-pulse`      | "end session", "capture state", "session summary"                    |
+| `sadd`               | "subagent-driven development", "execute tasks with agents"           |
+| `self-review`        | "fill in the reflect", "write the session review"                    |
 | `sentinel-autofixer` | "apply review fixes", "fix sentinel suggestions"                     |
-| `valerie`            | "manage todos", "add task", "list todos"                             |
+| `triage`             | "triage", "what needs fixing"                                        |
+| `using-gkg`          | "use gkg", "query the code graph"                                    |
+| `using-rslm`         | "use rslm", "Rhai language server"                                   |
 
 ### Agents
 
-All agents are thin wrappers — domain logic lives in `devkit`. Do not embed behavior here.
+Agents define routing and execution procedures. Prefer companion tools for reusable domain
+implementations, while keeping required policy explicit in each agent definition.
 
-| Agent       | Purpose                                                           |
-| ----------- | ----------------------------------------------------------------- |
-| `sentinel`  | Structured code review (hexagonal arch, Rust/Go conventions)      |
-| `forge`     | Primary dev companion: design, debug, refactor                    |
-| `herald`    | Cross-repo activity → Obsidian daily note                         |
-| `conductor` | devloop → doob → devkit workflow pipeline                         |
-| `oxidizer`  | Rust-specific review (clippy, unsafe, edition 2024)               |
-| `minion`    | General-purpose parallel worker for independent subtasks          |
-| `maxion`    | Structured task planner for complex or ambiguous items            |
-| `midion`    | Parallel worker dispatched by handon for backlog items            |
-| `workshop`  | Full-suite test agent — verifies skill loading and plugin surface |
+| Agent        | Purpose                                                           |
+| ------------ | ----------------------------------------------------------------- |
+| `sentinel`   | Structured code review (hexagonal arch, Rust/Go conventions)      |
+| `forge`      | Primary dev companion: design, debug, refactor                    |
+| `herald`     | Cross-repo activity → Obsidian daily note                         |
+| `conductor`  | devloop → doob → devkit workflow pipeline                         |
+| `oxidizer`   | Rust-specific review (clippy, unsafe, edition 2024)               |
+| `minion`     | General-purpose parallel worker for independent subtasks          |
+| `maxion`     | Structured task planner for complex or ambiguous items            |
+| `midion`     | Parallel worker dispatched by handon for backlog items            |
+| `workshop`   | Full-suite test agent — verifies skill loading and plugin surface |
+| `rslm-agent` | RSLM architecture and implementation specialist                   |
 
 **Agent Permissions:**
 
@@ -98,9 +117,9 @@ is the scripted bridge that captures open HANDOFF items into the authoritative `
 
 ## Key Design Rules
 
-- **Thin agents only** — agents delegate to `devkit`; no domain logic lives in `atelier/agents/`.
-- `.ctx/HANDOFF.state.yaml` is intentionally gitignored — it tracks local session state and appearing
-  untracked in `git status` is normal, not a dirty tree.
+- **Shared implementations** — prefer companion tools for reusable domain logic while keeping
+  required routing and execution policy explicit in agent definitions.
+- `.ctx/HANDOFF.*.state.yaml` is intentionally gitignored because it tracks local session state.
 - **No duplicate hooks** — global hooks (`rtk-rewrite.sh`, `cargo-fmt.nu`, etc.) live in
   `~/.claude/hooks/`; never copy them here.
 - **`cargo-gate` runs xtask first** — always calls `cargo xtask pre-commit`; the skill adds
@@ -126,17 +145,11 @@ per machine before any `@bazaar` install: `claude plugin marketplace add https:/
 3. Work happens using skills (`cargo-gate`, `git-guard`, `ci-assist`, etc.)
 4. Session ends → `project-pulse` captures state snapshot → `handoff` writes `.ctx/HANDOFF` files
 
-## Valerie Setup
+## Native Runtime
 
-`setup.nu` uses `input` and requires an interactive terminal — it fails in Claude Code's
-non-interactive context. Write the config directly instead:
-
-```yaml
-# ~/.claude/plugins/cache/local/atelier/<version>/.claude-plugin/valerie.local.yaml
-backend: doob
-shell: nu
-configured: YYYY-MM-DD
-```
+`cargo run -- --help` is the source of truth for the staged native CLI. The parser currently
+exposes `validate`, `generate`, `install`, `hook`, `handoff`, `schema`, and `repo-hook`.
+Implementation proceeds through `docs/plans/2026-08-31-multi-harness-rust-runtime.md`.
 
 ## Adding or Editing Skills
 
@@ -148,11 +161,13 @@ Each skill lives at `skills/<name>/SKILL.md`. After editing:
 
 ## Editing `plugin.json`
 
-The manifest at `.claude-plugin/plugin.json` registers plugin metadata and agents. After any change:
+The manifest at `.claude-plugin/plugin.json` registers plugin metadata. After any change:
 
 ```bash
 just reinstall
 ```
 
-The `version` field is auto-set by the post-commit hook to the current git hash — do not set it
-manually.
+The `version` field is auto-set by the pre-push hook to the source HEAD hash before the hook's
+version-stamp commit — do not set it manually.
+
+@OPAVS.md

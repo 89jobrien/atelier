@@ -1,5 +1,8 @@
 # joe-dev Plugin Suite Implementation Plan
 
+**Status:** Historical and superseded. The repository is now Atelier; use
+`docs/plans/2026-08-31-multi-harness-rust-runtime.md` for active implementation work.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development
 > (recommended) or superpowers:executing-plans to implement this plan task-by-task.
 > Steps use checkbox (`- [ ]`) syntax for tracking.
@@ -21,34 +24,34 @@ JSON (plugin manifests and hook config), SKILL.md / agent.md conventions.
 
 ### `joe-dev` plugin
 
-| File | Purpose |
-|------|---------|
-| `joe-dev/plugin.json` | Manifest |
-| `joe-dev/README.md` | Installation and usage docs |
-| `joe-dev/.gitignore` | Ignore `.claude/*.local.md` |
-| `joe-dev/skills/cargo-gate/SKILL.md` | Rust validation gate skill |
-| `joe-dev/skills/sentinel-autofixer/SKILL.md` | Auto-apply sentinel review fixes |
-| `joe-dev/skills/hook-diagnostics/SKILL.md` | Hook visibility and failure surfacing |
-| `joe-dev/skills/git-guard/SKILL.md` | Safe merge/rebase strategy |
-| `joe-dev/skills/ci-assist/SKILL.md` | CI workflow editing and cross-compile |
-| `joe-dev/skills/project-pulse/SKILL.md` | Session-end multi-repo state capture |
-| `joe-dev/skills/handoff/SKILL.md` | Write HANDOFF.yaml at session end |
-| `joe-dev/skills/handon/SKILL.md` | Read HANDOFF.yaml at session start |
-| `joe-dev/agents/sentinel.md` | Code review agent (devkit delegate) |
-| `joe-dev/agents/forge.md` | Dev companion agent (devkit delegate) |
-| `joe-dev/agents/herald.md` | Cross-repo synthesis agent (devkit delegate) |
-| `joe-dev/agents/conductor.md` | Workflow orchestrator agent (devkit delegate) |
-| `joe-dev/agents/oxidizer.md` | Rust-specific reviewer agent (devkit delegate) |
+| File                                         | Purpose                                        |
+| -------------------------------------------- | ---------------------------------------------- |
+| `joe-dev/plugin.json`                        | Manifest                                       |
+| `joe-dev/README.md`                          | Installation and usage docs                    |
+| `joe-dev/.gitignore`                         | Ignore `.claude/*.local.md`                    |
+| `joe-dev/skills/cargo-gate/SKILL.md`         | Rust validation gate skill                     |
+| `joe-dev/skills/sentinel-autofixer/SKILL.md` | Auto-apply sentinel review fixes               |
+| `joe-dev/skills/hook-diagnostics/SKILL.md`   | Hook visibility and failure surfacing          |
+| `joe-dev/skills/git-guard/SKILL.md`          | Safe merge/rebase strategy                     |
+| `joe-dev/skills/ci-assist/SKILL.md`          | CI workflow editing and cross-compile          |
+| `joe-dev/skills/project-pulse/SKILL.md`      | Session-end multi-repo state capture           |
+| `joe-dev/skills/handoff/SKILL.md`            | Write HANDOFF.yaml at session end              |
+| `joe-dev/skills/handon/SKILL.md`             | Read HANDOFF.yaml at session start             |
+| `joe-dev/agents/sentinel.md`                 | Code review agent (devkit delegate)            |
+| `joe-dev/agents/forge.md`                    | Dev companion agent (devkit delegate)          |
+| `joe-dev/agents/herald.md`                   | Cross-repo synthesis agent (devkit delegate)   |
+| `joe-dev/agents/conductor.md`                | Workflow orchestrator agent (devkit delegate)  |
+| `joe-dev/agents/oxidizer.md`                 | Rust-specific reviewer agent (devkit delegate) |
 
 ### `joe-secrets` plugin
 
-| File | Purpose |
-|------|---------|
-| `joe-secrets/plugin.json` | Manifest |
-| `joe-secrets/README.md` | Installation and usage docs |
-| `joe-secrets/.gitignore` | Ignore `.claude/*.local.md` |
-| `joe-secrets/skills/op-resolver/SKILL.md` | 1Password/direnv validation skill |
-| `joe-secrets/hooks/hooks.json` | SessionStart hook registration |
+| File                                       | Purpose                                   |
+| ------------------------------------------ | ----------------------------------------- |
+| `joe-secrets/plugin.json`                  | Manifest                                  |
+| `joe-secrets/README.md`                    | Installation and usage docs               |
+| `joe-secrets/.gitignore`                   | Ignore `.claude/*.local.md`               |
+| `joe-secrets/skills/op-resolver/SKILL.md`  | 1Password/direnv validation skill         |
+| `joe-secrets/hooks/hooks.json`             | SessionStart hook registration            |
 | `joe-secrets/hooks/op-resolver-startup.sh` | Startup script: op auth + env chain trace |
 
 ---
@@ -56,6 +59,7 @@ JSON (plugin manifests and hook config), SKILL.md / agent.md conventions.
 ## Task 1: Scaffold `joe-dev` plugin structure
 
 **Files:**
+
 - Create: `~/.claude/plugins/joe-dev/plugin.json`
 - Create: `~/.claude/plugins/joe-dev/README.md`
 - Create: `~/.claude/plugins/joe-dev/.gitignore`
@@ -105,7 +109,7 @@ Create `$HOME/.claude/plugins/joe-dev/.gitignore`:
 
 Create `$HOME/.claude/plugins/joe-dev/README.md`:
 
-```markdown
+````markdown
 # joe-dev
 
 Personal dev workflow plugin — Rust gates, code review, CI, git safety, multi-repo pulse.
@@ -117,36 +121,38 @@ Personal dev workflow plugin — Rust gates, code review, CI, git safety, multi-
 cc --plugin-dir ~/.claude/plugins/joe-dev
 cc --plugin-dir ~/.claude/plugins/joe-secrets
 ```
+````
 
 ## Skills
 
-| Skill | Trigger Phrases |
-|-------|----------------|
-| cargo-gate | "run gates", "validate rust", "pre-commit check" |
+| Skill              | Trigger Phrases                                                     |
+| ------------------ | ------------------------------------------------------------------- |
+| cargo-gate         | "run gates", "validate rust", "pre-commit check"                    |
 | sentinel-autofixer | "apply review fixes", "fix sentinel suggestions", "auto-fix review" |
-| hook-diagnostics | "show hook status", "hook failures", "what hooks ran" |
-| git-guard | "safe to commit", "check merge strategy", "commit safely" |
-| ci-assist | "edit workflow", "fix CI", "check cross-compile", "verify binary" |
-| project-pulse | "end session", "capture state", "session summary" |
-| handoff | "write handoff", "end of session", "capture handoff" |
-| handon | "start session", "orient to work", "what's outstanding" |
+| hook-diagnostics   | "show hook status", "hook failures", "what hooks ran"               |
+| git-guard          | "safe to commit", "check merge strategy", "commit safely"           |
+| ci-assist          | "edit workflow", "fix CI", "check cross-compile", "verify binary"   |
+| project-pulse      | "end session", "capture state", "session summary"                   |
+| handoff            | "write handoff", "end of session", "capture handoff"                |
+| handon             | "start session", "orient to work", "what's outstanding"             |
 
 ## Agents
 
-| Agent | Purpose |
-|-------|---------|
-| sentinel | Structured code review (delegates to devkit) |
-| forge | Dev companion — design, debug, refactor (delegates to devkit) |
-| herald | Cross-repo synthesis → Obsidian (delegates to devkit) |
-| conductor | devloop → doob → devkit pipeline (delegates to devkit) |
-| oxidizer | Rust-specific review: clippy, unsafe, edition 2024 (delegates to devkit) |
+| Agent     | Purpose                                                                  |
+| --------- | ------------------------------------------------------------------------ |
+| sentinel  | Structured code review (delegates to devkit)                             |
+| forge     | Dev companion — design, debug, refactor (delegates to devkit)            |
+| herald    | Cross-repo synthesis → Obsidian (delegates to devkit)                    |
+| conductor | devloop → doob → devkit pipeline (delegates to devkit)                   |
+| oxidizer  | Rust-specific review: clippy, unsafe, edition 2024 (delegates to devkit) |
 
 ## Notes
 
 - `cargo-gate` runs `cargo xtask pre-commit` first — the xtask gate always takes priority.
 - `joe-secrets` must also be installed for the session-start op-resolver + handon chain.
 - All agents are thin wrappers; devkit must be installed and accessible.
-```
+
+````
 
 - [ ] **Step 5: Verify structure**
 
@@ -154,7 +160,7 @@ cc --plugin-dir ~/.claude/plugins/joe-secrets
 ls $HOME/.claude/plugins/joe-dev/
 ls $HOME/.claude/plugins/joe-dev/skills/
 ls $HOME/.claude/plugins/joe-dev/agents/
-```
+````
 
 Expected: all directories present, plugin.json, README.md, .gitignore visible.
 
@@ -169,16 +175,18 @@ cd $HOME/.claude/plugins/joe-dev && git init && git add -A && git commit -m "fea
 ## Task 2: Write `cargo-gate` skill
 
 **Files:**
+
 - Create: `~/.claude/plugins/joe-dev/skills/cargo-gate/SKILL.md`
 
 - [ ] **Step 1: Write SKILL.md**
 
 Create `$HOME/.claude/plugins/joe-dev/skills/cargo-gate/SKILL.md`:
 
-```markdown
+````markdown
 ---
 name: cargo-gate
-description: This skill should be used when the user asks to "run gates", "validate rust",
+description:
+  This skill should be used when the user asks to "run gates", "validate rust",
   "pre-commit check", "run cargo validation", "check before committing", or wants to run
   the full Rust validation suite before a commit.
 ---
@@ -201,6 +209,7 @@ Always run stages in this order:
 ```bash
 cargo xtask pre-commit
 ```
+````
 
 If `cargo xtask pre-commit` is not available (no xtask in workspace), fall back to:
 
@@ -242,19 +251,21 @@ It does NOT run `cargo test` by default. Add test stage separately if needed.
 
 Invoke before every commit on Rust projects. Pairs with `git-guard` — run cargo-gate
 first, then git-guard to confirm merge strategy before committing.
-```
+
+````
 
 - [ ] **Step 2: Commit**
 
 ```bash
 cd $HOME/.claude/plugins/joe-dev && git add -A && git commit -m "feat: add cargo-gate skill"
-```
+````
 
 ---
 
 ## Task 3: Write `sentinel-autofixer` skill
 
 **Files:**
+
 - Create: `~/.claude/plugins/joe-dev/skills/sentinel-autofixer/SKILL.md`
 
 - [ ] **Step 1: Write SKILL.md**
@@ -264,7 +275,8 @@ Create `$HOME/.claude/plugins/joe-dev/skills/sentinel-autofixer/SKILL.md`:
 ```markdown
 ---
 name: sentinel-autofixer
-description: This skill should be used when the user asks to "apply review fixes",
+description:
+  This skill should be used when the user asks to "apply review fixes",
   "fix sentinel suggestions", "auto-fix review", "apply code review", "batch apply
   sentinel fixes", or wants to automatically apply suggestion-level fixes from a
   sentinel code review report.
@@ -279,38 +291,43 @@ suggestion-level fixes in a single batch commit. Never auto-apply blocking issue
 
 Sentinel reports contain three categories:
 
-| Category | Action |
-|----------|--------|
-| **Blocking** | Surface to user — do NOT auto-apply. Require explicit instruction. |
-| **Suggestions** | Apply automatically after dry-run confirmation. |
-| **Observations** | Inform user — no action unless requested. |
+| Category         | Action                                                             |
+| ---------------- | ------------------------------------------------------------------ |
+| **Blocking**     | Surface to user — do NOT auto-apply. Require explicit instruction. |
+| **Suggestions**  | Apply automatically after dry-run confirmation.                    |
+| **Observations** | Inform user — no action unless requested.                          |
 
 ## Workflow
 
 1. Read the sentinel report from the current conversation or ask the user to paste it
 2. Extract all suggestion-level items
 3. Present a dry-run diff of proposed changes:
-   ```
-   SUGGESTION 1: [description]
-   File: src/handler.rs:42
-   - old code
-   + new code
-   ```
+```
+
+SUGGESTION 1: [description]
+File: src/handler.rs:42
+
+- old code
+
+* new code
+
+````
 4. Ask: "Apply N suggestions? (yes/no/select)"
 5. If yes: apply all changes, run `cargo check --workspace` to verify
 6. If select: apply only confirmed items
 7. Commit all applied fixes in one batch commit:
-   ```bash
-   git add -A && git commit -m "fix: apply sentinel suggestion-level fixes"
-   ```
+```bash
+git add -A && git commit -m "fix: apply sentinel suggestion-level fixes"
+````
 
 ## Blocking Issues
 
 When blocking issues are present, always surface them first:
 
 > "Sentinel found N blocking issue(s) that require manual review:
+>
 > 1. [issue description] — [file:line]
-> These will NOT be auto-applied."
+>    These will NOT be auto-applied."
 
 Do not proceed with suggestion fixes until the user acknowledges blocking issues.
 
@@ -326,19 +343,21 @@ To generate a fresh sentinel report before auto-fixing, invoke the `sentinel` ag
 > "Review [file or diff] for issues"
 
 The sentinel agent will produce a structured report that this skill can consume.
-```
+
+````
 
 - [ ] **Step 2: Commit**
 
 ```bash
 cd $HOME/.claude/plugins/joe-dev && git add -A && git commit -m "feat: add sentinel-autofixer skill"
-```
+````
 
 ---
 
 ## Task 4: Write `hook-diagnostics` skill
 
 **Files:**
+
 - Create: `~/.claude/plugins/joe-dev/skills/hook-diagnostics/SKILL.md`
 
 - [ ] **Step 1: Write SKILL.md**
@@ -376,16 +395,17 @@ Active hooks come from two sources:
 ## Checking Hook Status
 
 To list currently loaded hooks, run in Claude Code:
+```
 
-```
 /hooks
-```
+
+````
 
 To check hook failure logs from post-tool-track-failures.py:
 
 ```bash
 ls -lt $HOME/.claude/hooks/failures/ | head -20
-```
+````
 
 If the failures directory doesn't exist, no failures have been recorded this session.
 
@@ -425,32 +445,34 @@ not directly measured, but `claude --debug` shows hook timing in the debug log.
 
 ## Common Failures
 
-| Hook | Common Cause | Fix |
-|------|-------------|-----|
-| rtk-rewrite.sh | rtk binary not on PATH | `which rtk` — reinstall if missing |
-| pre-tool-course-correct.py | Python not found | `which python3` |
-| post-edit-cargo-fmt.nu | nu not on PATH | `which nu` |
-| op-resolver-startup.sh | 1Password not authed | `op account list` |
-```
+| Hook                       | Common Cause           | Fix                                |
+| -------------------------- | ---------------------- | ---------------------------------- |
+| rtk-rewrite.sh             | rtk binary not on PATH | `which rtk` — reinstall if missing |
+| pre-tool-course-correct.py | Python not found       | `which python3`                    |
+| post-edit-cargo-fmt.nu     | nu not on PATH         | `which nu`                         |
+| op-resolver-startup.sh     | 1Password not authed   | `op account list`                  |
+
+````
 
 - [ ] **Step 2: Commit**
 
 ```bash
 cd $HOME/.claude/plugins/joe-dev && git add -A && git commit -m "feat: add hook-diagnostics skill"
-```
+````
 
 ---
 
 ## Task 5: Write `git-guard` skill
 
 **Files:**
+
 - Create: `~/.claude/plugins/joe-dev/skills/git-guard/SKILL.md`
 
 - [ ] **Step 1: Write SKILL.md**
 
 Create `$HOME/.claude/plugins/joe-dev/skills/git-guard/SKILL.md`:
 
-```markdown
+````markdown
 ---
 name: git-guard
 description: This skill should be used when the user asks to "safe to commit",
@@ -473,6 +495,7 @@ Run these checks in order:
 ```bash
 git log --oneline --merges main..HEAD
 ```
+````
 
 If output is non-empty: the branch contains merge commits. **Do NOT rebase.** Use merge.
 
@@ -541,29 +564,32 @@ Always run `cargo-gate` before `git-guard` on Rust projects:
 
 1. `cargo-gate` — validates the build is clean
 2. `git-guard` — confirms strategy and signs the commit
-```
+
+````
 
 - [ ] **Step 2: Commit**
 
 ```bash
 cd $HOME/.claude/plugins/joe-dev && git add -A && git commit -m "feat: add git-guard skill"
-```
+````
 
 ---
 
 ## Task 6: Write `ci-assist` skill
 
 **Files:**
+
 - Create: `~/.claude/plugins/joe-dev/skills/ci-assist/SKILL.md`
 
 - [ ] **Step 1: Write SKILL.md**
 
 Create `$HOME/.claude/plugins/joe-dev/skills/ci-assist/SKILL.md`:
 
-```markdown
+````markdown
 ---
 name: ci-assist
-description: This skill should be used when the user asks to "edit workflow", "fix CI",
+description:
+  This skill should be used when the user asks to "edit workflow", "fix CI",
   "check cross-compile", "verify binary", "update github actions", "debug CI failure",
   "verify target triple", or needs help with CI/CD workflow files or cross-compilation.
 ---
@@ -590,16 +616,17 @@ jobs:
       # ... rest of workflow
 EOF
 ```
+````
 
 Reference canonical patterns from `~/dev/minibox` (`.github/workflows/ci.yml`,
 `nightly.yml`, `release.yml`, `deny.toml`).
 
 ## Cross-Compilation Target Reference
 
-| Environment | Target Triple |
-|-------------|--------------|
-| Local macOS (M-series) | `aarch64-apple-darwin` |
-| VPS / minibox deploy | `x86_64-unknown-linux-musl` |
+| Environment            | Target Triple               |
+| ---------------------- | --------------------------- |
+| Local macOS (M-series) | `aarch64-apple-darwin`      |
+| VPS / minibox deploy   | `x86_64-unknown-linux-musl` |
 
 **Never rsync a binary before verifying target.** Always run:
 
@@ -608,11 +635,13 @@ file <binary>
 ```
 
 Expected output for VPS binary:
+
 ```
 <binary>: ELF 64-bit LSB executable, x86-64, statically linked
 ```
 
 Expected output for local binary:
+
 ```
 <binary>: Mach-O 64-bit executable arm64
 ```
@@ -654,12 +683,12 @@ gh workflow list
 
 ## Common CI Failure Patterns
 
-| Symptom | Likely Cause | Fix |
-|---------|-------------|-----|
+| Symptom                                            | Likely Cause                                  | Fix                                                |
+| -------------------------------------------------- | --------------------------------------------- | -------------------------------------------------- |
 | `cargo build` fails on Linux CI but passes locally | Wrong target triple or missing musl toolchain | Add `x86_64-unknown-linux-musl` target in workflow |
-| `op://` URI appears in logs | Secret not injected via `op run` | Wrap command with `op run --` in workflow |
-| Clippy warnings fail CI | Warnings promoted to errors (`-D warnings`) | Fix clippy warnings locally first |
-| Workflow file not updated | Edit tool blocked | Use heredoc approach above |
+| `op://` URI appears in logs                        | Secret not injected via `op run`              | Wrap command with `op run --` in workflow          |
+| Clippy warnings fail CI                            | Warnings promoted to errors (`-D warnings`)   | Fix clippy warnings locally first                  |
+| Workflow file not updated                          | Edit tool blocked                             | Use heredoc approach above                         |
 
 ## Reference Repo
 
@@ -668,19 +697,21 @@ For canonical CI patterns, read from `~/dev/minibox/.github/workflows/`:
 ```bash
 ls ~/dev/minibox/.github/workflows/
 ```
-```
+
+````
 
 - [ ] **Step 2: Commit**
 
 ```bash
 cd $HOME/.claude/plugins/joe-dev && git add -A && git commit -m "feat: add ci-assist skill"
-```
+````
 
 ---
 
 ## Task 7: Write `project-pulse` skill
 
 **Files:**
+
 - Create: `~/.claude/plugins/joe-dev/skills/project-pulse/SKILL.md`
 
 - [ ] **Step 1: Write SKILL.md**
@@ -690,7 +721,8 @@ Create `$HOME/.claude/plugins/joe-dev/skills/project-pulse/SKILL.md`:
 ```markdown
 ---
 name: project-pulse
-description: This skill should be used when the user asks to "end session", "capture state",
+description:
+  This skill should be used when the user asks to "end session", "capture state",
   "session summary", "what changed this session", "summarize repos", "write session notes",
   or wants to capture multi-repo state at the end of a work session.
 ---
@@ -703,8 +735,8 @@ memory files and the Obsidian daily note.
 ## Active Repos
 
 Default active repos to check:
-
 ```
+
 ~/dev/minibox
 ~/dev/maestro
 ~/dev/devloop
@@ -713,7 +745,8 @@ Default active repos to check:
 ~/dev/magi
 ~/dev/mcpipe
 ~/dev/braid
-```
+
+````
 
 Add or remove repos based on what was active in the current session.
 
@@ -727,7 +760,7 @@ git branch --show-current          # current branch
 git log --oneline -5               # last 5 commits
 git status --short                 # uncommitted changes
 gh pr list --state open --limit 3  # open PRs (if gh available)
-```
+````
 
 ## Session Diff
 
@@ -764,6 +797,7 @@ type: project
 **Last commit:** abc1234 fix: clean up GC loop
 
 **Open PRs:**
+
 - #42 feat: image GC (draft)
 
 **Uncommitted changes:** none
@@ -782,10 +816,10 @@ Append under a `## Session Pulse` heading:
 ```markdown
 ## Session Pulse
 
-| Repo | Branch | Commits | Status |
-|------|--------|---------|--------|
-| minibox | feat/gc-images | +3 | clean |
-| devloop | main | 0 | clean |
+| Repo    | Branch         | Commits | Status |
+| ------- | -------------- | ------- | ------ |
+| minibox | feat/gc-images | +3      | clean  |
+| devloop | main           | 0       | clean  |
 ```
 
 If the daily note doesn't exist, create it with the pulse section.
@@ -803,19 +837,21 @@ Use both for complete session-end coverage: pulse first (structured), herald sec
 
 After `project-pulse`, run `handoff` to write `HANDOFF.yaml` with actionable next steps.
 The two skills complement each other: pulse captures what happened, handoff captures what's next.
-```
+
+````
 
 - [ ] **Step 2: Commit**
 
 ```bash
 cd $HOME/.claude/plugins/joe-dev && git add -A && git commit -m "feat: add project-pulse skill"
-```
+````
 
 ---
 
 ## Task 8: Write `handoff` and `handon` skills
 
 **Files:**
+
 - Create: `~/.claude/plugins/joe-dev/skills/handoff/SKILL.md`
 - Create: `~/.claude/plugins/joe-dev/skills/handon/SKILL.md`
 
@@ -823,10 +859,11 @@ cd $HOME/.claude/plugins/joe-dev && git add -A && git commit -m "feat: add proje
 
 Create `$HOME/.claude/plugins/joe-dev/skills/handoff/SKILL.md`:
 
-```markdown
+````markdown
 ---
 name: handoff
-description: This skill should be used when the user asks to "write handoff", "end of session",
+description:
+  This skill should be used when the user asks to "write handoff", "end of session",
   "capture handoff", "save handoff", "update HANDOFF.yaml", or wants to record current project
   state and outstanding work for the next session.
 ---
@@ -867,12 +904,14 @@ next_session:
 blockers:
   - "SSH key rotation required before VPS test"
 ```
+````
 
 ## Gathering Content
 
 Before writing, collect:
 
 1. **Completed:** Ask user "What did we finish this session?" or infer from git log:
+
    ```bash
    git log --oneline $(git log --format="%H" --since="8 hours ago" | tail -1)..HEAD
    ```
@@ -904,10 +943,12 @@ Confirm with the user:
 > "HANDOFF.yaml written to `<path>`. Commit it?"
 
 If yes:
+
 ```bash
 git add HANDOFF.yaml && git commit -m "chore: update handoff for session end"
 ```
-```
+
+````
 
 - [ ] **Step 2: Write handon SKILL.md**
 
@@ -930,7 +971,8 @@ outstanding work at session start. Invoked automatically by the `joe-secrets` Se
 
 Scan for HANDOFF.yaml in:
 
-```
+````
+
 ~/dev/minibox
 ~/dev/maestro
 ~/dev/devloop
@@ -939,7 +981,8 @@ Scan for HANDOFF.yaml in:
 ~/dev/magi
 ~/dev/mcpipe
 ~/dev/braid
-```
+
+````
 
 Also check the current working directory repo.
 
@@ -949,13 +992,14 @@ For each repo with a HANDOFF.yaml:
 
 ```bash
 ls ~/dev/*/HANDOFF.yaml 2>/dev/null
-```
+````
 
 Read each file and extract: `in_progress`, `next_session`, `blockers`, `updated`.
 
 ## Triage and Presentation
 
 Sort by:
+
 1. `blockers` non-empty — surface first
 2. `in_progress` items with `priority: high`
 3. `next_session` items
@@ -993,19 +1037,21 @@ If no HANDOFF.yaml files are found:
 
 This skill is invoked automatically by the `joe-secrets` SessionStart hook after op-resolver
 completes. No manual trigger needed at session start — it fires on every new Claude session.
-```
+
+````
 
 - [ ] **Step 3: Commit**
 
 ```bash
 cd $HOME/.claude/plugins/joe-dev && git add -A && git commit -m "feat: add handoff and handon skills"
-```
+````
 
 ---
 
 ## Task 9: Write the five agents
 
 **Files:**
+
 - Create: `~/.claude/plugins/joe-dev/agents/sentinel.md`
 - Create: `~/.claude/plugins/joe-dev/agents/forge.md`
 - Create: `~/.claude/plugins/joe-dev/agents/herald.md`
@@ -1239,6 +1285,7 @@ cd $HOME/.claude/plugins/joe-dev && git add -A && git commit -m "feat: add all f
 ## Task 10: Scaffold and build `joe-secrets` plugin
 
 **Files:**
+
 - Create: `~/.claude/plugins/joe-secrets/plugin.json`
 - Create: `~/.claude/plugins/joe-secrets/README.md`
 - Create: `~/.claude/plugins/joe-secrets/.gitignore`
@@ -1281,10 +1328,11 @@ Create `$HOME/.claude/plugins/joe-secrets/.gitignore`:
 
 Create `$HOME/.claude/plugins/joe-secrets/skills/op-resolver/SKILL.md`:
 
-```markdown
+````markdown
 ---
 name: op-resolver
-description: This skill should be used when the user asks to "resolve secrets", "check
+description:
+  This skill should be used when the user asks to "resolve secrets", "check
   1password", "debug env", "why isn't my op:// ref working", "trace direnv chain",
   "fix secret not loading", or invokes /joe-secrets:op-resolver. Also fires automatically
   at session start via the SessionStart hook.
@@ -1300,6 +1348,7 @@ URI conflicts between accounts, and report missing environment variables.
 ```bash
 op account list
 ```
+````
 
 Expected output: table showing at least two accounts (toptal.1password.com and my.1password.com).
 
@@ -1367,19 +1416,20 @@ LITERAL OP:// REFS None in current environment
 
 ## Common Issues
 
-| Issue | Fix |
-|-------|-----|
-| `op account list` fails | Run `op signin` or unlock 1Password |
+| Issue                          | Fix                                    |
+| ------------------------------ | -------------------------------------- |
+| `op account list` fails        | Run `op signin` or unlock 1Password    |
 | `source_up` not loading parent | Run `direnv reload` in each parent dir |
-| Wrong account selected | Add `--account <uuid>` to `op run` |
-| Literal op:// in env | Wrap command with `op run --` |
-| op item not found | Use UUID not item name in op:// path |
+| Wrong account selected         | Add `--account <uuid>` to `op run`     |
+| Literal op:// in env           | Wrap command with `op run --`          |
+| op item not found              | Use UUID not item name in op:// path   |
 
 ## Always Use UUIDs
 
 Never use item names in `op://` paths — they may not resolve correctly across accounts.
 Use `op item list --vault <vault>` to get exact item UUIDs.
-```
+
+````
 
 - [ ] **Step 5: Write hooks.json**
 
@@ -1403,7 +1453,7 @@ Create `$HOME/.claude/plugins/joe-secrets/hooks/hooks.json`:
     ]
   }
 }
-```
+````
 
 - [ ] **Step 6: Write op-resolver-startup.sh**
 
@@ -1467,7 +1517,7 @@ chmod +x $HOME/.claude/plugins/joe-secrets/hooks/op-resolver-startup.sh
 
 Create `$HOME/.claude/plugins/joe-secrets/README.md`:
 
-```markdown
+````markdown
 # joe-secrets
 
 1Password and direnv session management — secrets validation and env chain tracing.
@@ -1477,18 +1527,20 @@ Create `$HOME/.claude/plugins/joe-secrets/README.md`:
 ```bash
 cc --plugin-dir ~/.claude/plugins/joe-secrets
 ```
+````
 
 Install alongside `joe-dev` for the full session-start experience.
 
 ## Skills
 
-| Skill | Trigger |
-|-------|---------|
+| Skill       | Trigger                                                                       |
+| ----------- | ----------------------------------------------------------------------------- |
 | op-resolver | "resolve secrets", "check 1password", "debug env", `/joe-secrets:op-resolver` |
 
 ## Hooks
 
 `SessionStart` — automatically runs on every new Claude session:
+
 1. Validates `op account list`
 2. Traces `.envrc` `source_up` chain
 3. Counts `op://` refs and detects literal URIs in environment
@@ -1502,13 +1554,14 @@ Install alongside `joe-dev` for the full session-start experience.
 
 - 1Password CLI (`op`) installed and on PATH
 - `direnv` installed (optional — chain tracing degrades gracefully without it)
-```
+
+````
 
 - [ ] **Step 8: Init git and commit**
 
 ```bash
 cd $HOME/.claude/plugins/joe-secrets && git init && git add -A && git commit -m "feat: initial joe-secrets plugin"
-```
+````
 
 ---
 
@@ -1587,20 +1640,20 @@ cd $HOME/.claude/plugins/joe-dev && git add -A && git commit -m "chore: validati
 
 Spec requirements vs. plan coverage:
 
-| Spec Requirement | Task |
-|-----------------|------|
-| joe-dev: 8 skills | Tasks 2–8 |
-| joe-dev: 5 agents (sentinel, forge, herald, conductor, oxidizer) | Task 9 |
-| joe-dev: no hooks | Confirmed — no hooks tasks for joe-dev |
-| joe-secrets: op-resolver skill | Task 10 |
-| joe-secrets: SessionStart hook | Task 10 |
-| joe-secrets: /joe-secrets:op-resolver slash command | Documented in SKILL.md frontmatter (auto-registered) |
-| cargo-gate: xtask priority | Task 2 |
-| sentinel-autofixer: never auto-apply blocking | Task 3 |
-| All agents: thin wrappers delegating to devkit | Task 9 |
-| oxidizer delegates to devkit sentinel with Rust focus | Task 9 step 5 |
-| project-pulse: writes to memory + Obsidian | Task 7 |
-| handon: invoked by joe-secrets hook | Task 8 + Task 10 step 5 |
-| hooks.json: plugin wrapper format | Task 10 step 5 |
+| Spec Requirement                                                 | Task                                                 |
+| ---------------------------------------------------------------- | ---------------------------------------------------- |
+| joe-dev: 8 skills                                                | Tasks 2–8                                            |
+| joe-dev: 5 agents (sentinel, forge, herald, conductor, oxidizer) | Task 9                                               |
+| joe-dev: no hooks                                                | Confirmed — no hooks tasks for joe-dev               |
+| joe-secrets: op-resolver skill                                   | Task 10                                              |
+| joe-secrets: SessionStart hook                                   | Task 10                                              |
+| joe-secrets: /joe-secrets:op-resolver slash command              | Documented in SKILL.md frontmatter (auto-registered) |
+| cargo-gate: xtask priority                                       | Task 2                                               |
+| sentinel-autofixer: never auto-apply blocking                    | Task 3                                               |
+| All agents: thin wrappers delegating to devkit                   | Task 9                                               |
+| oxidizer delegates to devkit sentinel with Rust focus            | Task 9 step 5                                        |
+| project-pulse: writes to memory + Obsidian                       | Task 7                                               |
+| handon: invoked by joe-secrets hook                              | Task 8 + Task 10 step 5                              |
+| hooks.json: plugin wrapper format                                | Task 10 step 5                                       |
 
 No gaps found.

@@ -3,8 +3,7 @@ name: insights-audit
 description:
   Use when the user runs "/insights-audit", asks to "validate the insights report", "audit
   the report against my projects", "check what the report got wrong", or wants to
-  cross-check an /insights-generated HTML report against actual GitHub repos and local
-  project directories.
+  cross-check an /insights-generated HTML report against actual local project directories.
 model: sonnet
 effort: medium
 allowed-tools:
@@ -17,9 +16,11 @@ allowed-tools:
 
 # insights-audit
 
-Cross-check an `/insights`-generated HTML report against actual GitHub repos and local
-`~/.claude/projects/` directories. Flag inaccuracies, undercounting, and sycophantic
-language, then patch the report in place.
+Cross-check an `/insights`-generated HTML report against actual local project directories.
+Flag inaccuracies, undercounting, and sycophantic language, then patch the report in place.
+
+This audit is local-filesystem-only by design — it never shells out to `gh` or any network
+call. GitHub state is not ground truth for this check; the workspace on disk is.
 
 ## Workflow
 
@@ -32,20 +33,13 @@ and tell the user.
 
 ### 2. Collect ground truth
 
-First, determine the GitHub username:
-
-1. `gh api user --jq .login`
-2. Fallback: `git config --global user.name`
-
-Then run in parallel:
+Local evidence only:
 
 ```bash
-# GitHub repos (substitute discovered username for GH_USER)
-GH_USER=$(gh api user --jq .login)
-gh repo list "$GH_USER" --limit 100 --json name,isPrivate \
-  --jq '.[] | [.name, (if .isPrivate then "private" else "public" end)] | @tsv'
+# Repos under the dev workspace
+ls $HOME/dev | sort
 
-# Local project dirs
+# Claude Code session directories (proves session activity, not authorship)
 ls $HOME/.claude/projects/ | sort
 ```
 
@@ -65,14 +59,16 @@ Read the report HTML and extract:
 
 For each tool or repo the report attributes to the user:
 
-1. Check if it exists in the GitHub repo list → **confirmed public**, **confirmed private**,
-   or **not on GitHub**
-2. For tools not on GitHub: check if a `~/.claude/projects/<name>` directory exists →
-   **local only**
-3. For tools that are clearly third-party (e.g. installed via `cargo install`, `npm install`,
-   `brew install`): flag as **misattributed**
+1. Check if a directory exists under `$HOME/dev/<name>` with a `.git` → **confirmed local repo**
+2. If not a top-level repo, search for it nested under a workspace's `crates/` (or
+   equivalent) directory before giving up — see the `insightx` example in Notes
+3. If no repo exists but a `~/.claude/projects/<name>` directory does → **local-only, session
+   activity but no committed repo** (worth noting, not necessarily wrong)
+4. If it's clearly third-party (e.g. installed via `cargo install`, `npm install`,
+   `brew install`, or a well-known open-source tool not owned by the user): flag as
+   **misattributed**
 
-Check for undercounted projects: look for GitHub repos or `~/.claude/projects/` entries
+Check for undercounted projects: look for `$HOME/dev/` or `~/.claude/projects/` entries
 that represent significant work (multiple directories with the same prefix, e.g.
 `maestro`, `maestro-ao`, `maestro-dev`) but are collapsed into a single report area or
 absent entirely.
@@ -103,7 +99,7 @@ Print a structured audit to stdout:
 - <project-family>: N directories in ~/.claude/projects/, collapsed to M in report
 
 ### Missing projects
-- <repo>: on GitHub, not surfaced in any report area
+- <repo>: confirmed local project, not surfaced in any report area
 
 ### Sycophantic language
 - "<original phrase>" → "<plain replacement>"
@@ -126,11 +122,13 @@ Do not patch without confirmation.
 
 ## Notes
 
-- `rustqual`, `cargo-nextest`, `cargo-deny`, `cargo-machete` and similar tools installed
-  via `cargo install` are third-party unless a GitHub repo exists under the user's account.
+- A local clone proves project activity, not authorship. Do not infer ownership without explicit
+  repository metadata or user confirmation.
 - A `~/.claude/projects/<name>` directory proves session activity but not authorship.
-- Private repos on GitHub confirm authorship; absence from GitHub does not disprove it
-  (could be local-only, pre-published, or a crate nested inside another workspace).
-- For tools not found as standalone repos, search workspace `crates/` directories before
-  marking as missing. Example: `insightx` is `checkup/crates/insightx/`, not a top-level repo.
+- Absence of a top-level `$HOME/dev/<name>` repo does not disprove authorship — it could be
+  nested inside another workspace's `crates/` directory. Always search before marking missing.
+  Example: `insightx` is `checkup/crates/insightx/`, not a top-level repo.
+- Never invoke `gh` or make any network call from this skill. If the user wants GitHub-side
+  verification (public/private status, remote-only repos), that's a separate, explicit ask —
+  not part of this audit.
 - Do not remove the validation section if it already exists — append or update it.

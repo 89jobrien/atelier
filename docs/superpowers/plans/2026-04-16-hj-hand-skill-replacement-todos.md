@@ -1,5 +1,8 @@
 # hj Hand-Skill Replacement Todo List
 
+**Status:** Historical and superseded by
+`docs/plans/2026-08-31-multi-harness-rust-runtime.md`.
+
 ## Goal
 
 Replace the shell/plumbing portions of the `atelier:hand*` skills with `hj` where that is already safe, and isolate the remaining gaps that still require skill-side logic.

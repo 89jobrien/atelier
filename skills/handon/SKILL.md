@@ -23,9 +23,9 @@ Scan the current directory tree for handoff files, parse items by priority, and 
 | P1       | Execute autonomously. Stop only if scope expands or something unexpected happens. |
 | P2       | Delegate to subagents. Cap at 5 concurrent.                                       |
 
-`handon` should use HANDOFF YAML plus `handoff-db`/SQLite only. Do not call `doob` here;
-`valerie` is the only skill that should touch `doob` or GitHub issue sync. Treat `items` as
-transient open-work context and `log` as durable completed-work history.
+`handon` uses HANDOFF YAML plus `handoff-db`/SQLite as the source of truth. Do not call `doob`
+or a task-provider plugin from this skill. Treat `items` as transient open-work context and
+`log` as durable completed-work history.
 
 ## Steps
 
@@ -59,6 +59,39 @@ If invoked from a workspace root (e.g. `~/dev`) with no `.git`, sweep subdirs fo
 If only a legacy `HANDOFF.md` exists at repo root, read it as freeform. Do not convert unless
 asked.
 
+### 1b. Git state and context priming
+
+After locating the repo root, run:
+
+```bash
+git branch --show-current
+git status --short
+git stash list
+git log --oneline -10
+git diff HEAD~3..HEAD --numstat 2>/dev/null || git log --max-count=3 --numstat --format=
+```
+
+Surface this as a compact **Git Context** block at the top of the triage output:
+
+```
+## Git Context
+
+Branch: <current branch>
+Dirty: <N files changed> | Stash: <N entries> (or "clean" / "no stash")
+
+Recent commits (last 10):
+  <hash> <message>
+  ...
+
+Recent file changes (last 3 commits):
+  <file> | <+lines> <-lines>
+  ...
+```
+
+If the working tree is dirty, list the modified/untracked files explicitly — the user needs to know what's in flight before diving into HANDOFF triage.
+
+Skip this step only if inside a non-git directory.
+
 ### 2. Run preflight script if present
 
 Before reading state and HANDOFF files manually, check for a `.ctx/scripts/preflight.rs` at the
@@ -69,8 +102,8 @@ test -f .ctx/scripts/preflight.rs && rxx .ctx/scripts/preflight.rs
 ```
 
 If it exists and `rxx` is on PATH, run it. Its output covers branch, git status, recent history,
-tracked files, and full `.ctx/HANDOFF*` content — skip steps 2a and 3 entirely and proceed
-directly to step 4 using the displayed HANDOFF content.
+tracked files, and full `.ctx/HANDOFF*` content — skip step 2a and proceed to step 3 using the
+displayed HANDOFF content.
 
 If the script is absent or `rxx` is not on PATH, continue with the manual steps below.
 
@@ -104,7 +137,7 @@ For each row returned, if the SQLite `status` differs from the YAML `status`, pr
 update the in-memory copy before triaging. Do not write back to HANDOFF.yaml here — that happens
 in step 9.
 
-If the script is not found or `sqlite3` is not on PATH, skip and continue with the local file.
+If `handoff-db` is not on PATH, skip and continue with the local file.
 
 ### 4. Review on wake
 
@@ -185,7 +218,7 @@ Then update `HANDOFF.yaml`:
 
 - Remove any item that was completed or closed upstream so `items` only carry open context
 - Add `log` entry for this session (one-liner, prepend to list)
-- Upsert remaining open/blocked items to SQLite via `handoff-db.sh upsert` (see handoff skill step 6)
+- Upsert remaining open/blocked items to SQLite via `handoff-db upsert` (see handoff skill step 6)
 - Commit: `git add .ctx/HANDOFF.<project>.*.yaml && git commit -m "docs: update handoff"`
 
 ## Edge Cases

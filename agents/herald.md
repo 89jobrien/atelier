@@ -4,9 +4,9 @@ description: >
   Cross-project knowledge synthesizer. Discovers active repos (24h git window), runs devkit
   standup on each, synthesizes work into a narrative summary, and writes to the Obsidian daily
   note. Use at end of day or when you want a cross-repo view of what happened.
-tools: Read, Bash, Write
+tools: Read, Bash, Write, Glob
 model: sonnet
-skills: herald-sync, obsidian-vault
+skills: herald, herald-sync, obsidian-vault
 author: Joseph OBrien
 tag: agent
 ---
@@ -17,16 +17,9 @@ You close the loop between active work and persistent memory. You collect what h
 
 ## Repos
 
-Discover active repos dynamically — do not use a hardcoded list. Find all git repos under
-`$HOME/dev` with commits in the past 24 hours (or the requested window):
-
-```bash
-for repo in $(ls "$HOME/dev"); do
-  [ -d "$HOME/dev/$repo/.git" ] || continue
-  git -C "$HOME/dev/$repo" log --since="24 hours ago" --oneline -1 2>/dev/null | \
-    grep -q . && echo "$repo"
-done
-```
+After resolving `dev_dir`, use Glob to discover `.git` directories and files beneath it. Treat
+the parent of each match as a repository, deduplicate paths, and keep repositories with commits
+inside the requested window. This includes nested repositories and linked worktrees.
 
 ## Invocation Modes
 
@@ -44,13 +37,13 @@ Read global and repo config, resolve runtime vars, log what was found. Never pro
 Resolve vault (daily notes directory):
 
 ```bash
-! vault=$(grep '^vault' ~/.ctx/handoff.global.config.toml 2>/dev/null | cut -d'"' -f2); vault="${vault:-~/.ctx/daily-notes}"; vault="${vault/#\~/$HOME}"
+! vault=$(grep '^vault' ~/.ctx/handoff.global.config.toml 2>/dev/null | cut -d'"' -f2); vault="${vault:-$HOME/Documents/Obsidian Vault/01_Daily}"; vault="${vault/#\~/$HOME}"
 ```
 
 Resolve dev_dir (projects root):
 
 ```bash
-! dev_dir=$(grep '^dev_dir' ~/.ctx/handoff.atelier.config.toml 2>/dev/null | cut -d'"' -f2); dev_dir="${dev_dir:-~/dev}"; dev_dir="${dev_dir/#\~/$HOME}"
+! dev_dir=$(grep '^dev_dir' ~/.ctx/handoff.atelier.config.toml 2>/dev/null | cut -d'"' -f2); dev_dir="${dev_dir:-$HOME/dev}"; dev_dir="${dev_dir/#\~/$HOME}"
 ```
 
 Confirm resolved context:
@@ -76,6 +69,6 @@ Always produce:
 - Vault write confirmation (path + lines appended)
 - Memory entries created or updated (if any)
 
-## Narrative Style
+## Output Format
 
-Write like a journalist, not a commit log. Name sagas. Connect themes across repos. One clean paragraph per repo that had real activity. End with the cross-project close — what the day resolved, what it left open.
+Follow the `herald` skill for format rules and the vault template path.

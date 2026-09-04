@@ -2,7 +2,10 @@
 
 **Date:** 2026-04-03
 **Author:** Joseph O'Brien
-**Status:** Approved
+**Status:** Superseded by `docs/designs/2026-08-31-multi-harness-rust-runtime-design.md`
+
+> Historical record only. Names, paths, inventories, installation commands, and architecture in
+> this document describe the original April 2026 proposal and are not current instructions.
 
 ---
 

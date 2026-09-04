@@ -21,7 +21,7 @@ Four local plugins form the full dev workflow:
 | --------------- | ----------------------------------------------------------------------------- |
 | **atelier**     | Rust gates, code review, CI safety, multi-repo pulse, session handoffs        |
 | **sanctum**     | 1Password auth validation, `.envrc` chain tracing, `op://` conflict detection |
-| **hand**        | Standalone session handoff toolkit (HANDOFF.yaml + SQLite)                   |
+| **hand**        | Standalone session handoff toolkit (HANDOFF.yaml + SQLite)                    |
 | **orca-strait** | Parallel TDD sub-agent orchestrator for Rust workspaces                       |
 
 atelier + sanctum are the core pair. hand and orca-strait are opt-in.
@@ -50,19 +50,20 @@ git clone https://github.com/89jobrien/sanctum ~/dev/sanctum
 cd ~/dev/atelier && just init
 cd ~/dev/sanctum && just init
 
-# Optional
-git clone https://github.com/89jobrien/hand ~/dev/hand
+# Optional Bazaar plugin
 git clone https://github.com/89jobrien/orca-strait ~/dev/orca-strait
-cd ~/dev/hand && just init
 cd ~/dev/orca-strait && just init
 ```
 
-Each `just init` will:
+`hand` has no GitHub remote. Install it only from an existing local checkout using that
+repository's `just init`; do not attempt to clone it.
 
-1. Set `core.hooksPath = .githooks` — post-commit auto-reinstalls plugin on source changes
-2. Register the local marketplace at `~/.claude/plugins/local-marketplace`
-3. Prompt for approval if required tools are missing
-4. Install the plugin via `claude plugin install <name>@local`
+For Atelier, Sanctum, and Orca Strait, `just init` will:
+
+1. Set `core.hooksPath = .githooks`
+2. Register or refresh the Bazaar marketplace
+3. Verify required tools
+4. Install the plugin via `claude plugin install <name>@bazaar`
 
 ## Step 3: Smoke Test — Skills
 
@@ -70,7 +71,7 @@ In a new Claude session, trigger each skill to confirm it loads:
 
 | Skill                    | Test phrase              |
 | ------------------------ | ------------------------ |
-| atelier:onboard-atelier  | `/onboard-atelier`       |
+| atelier:onboard          | `/atelier:onboard`       |
 | atelier:handon           | "what's outstanding"     |
 | atelier:cargo-gate       | "run gates"              |
 | atelier:hook-diagnostics | "show hook status"       |
@@ -99,7 +100,7 @@ claude plugin list | grep sanctum
 ## Step 5: Verify Handoff Setup
 
 ```bash
-ls ~/dev/*/HANDOFF.*.yaml 2>/dev/null | head -10
+ls ~/dev/*/.ctx/HANDOFF.*.yaml 2>/dev/null | head -10
 sqlite3 ~/.local/share/atelier/handoff.db "SELECT project, id, status FROM items;" 2>/dev/null
 ```
 
@@ -107,9 +108,9 @@ If no HANDOFF files exist, run `/hand:off` or `/atelier:handoff` at session end 
 
 ## Auto-Reinstall on Edit
 
-Every plugin repo has `.githooks/post-commit` that auto-reinstalls the plugin when
-`skills/`, `agents/`, `hooks/`, or `.claude-plugin/` files change. This requires
-`core.hooksPath = .githooks` — set by `just init`.
+Atelier's `.githooks/pre-push` stamps the manifest version and reinstalls the plugin when plugin
+sources changed. `.githooks/post-commit` is intentionally a no-op. `just init` configures
+`core.hooksPath = .githooks`.
 
 To reinstall manually without a full init:
 
@@ -124,4 +125,4 @@ cd ~/dev/<plugin> && just reinstall
 > 1. sanctum validates 1Password auth and traces your `.envrc` chain
 > 2. atelier:handon surfaces outstanding HANDOFF items across active repos
 >
-> Run `/onboard-atelier` again any time to re-verify the setup.
+> Run `/atelier:onboard` again any time to re-verify the setup.

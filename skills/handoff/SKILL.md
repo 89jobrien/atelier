@@ -19,11 +19,10 @@ allowed-tools:
 ## Overview
 
 `HANDOFF.yaml` is split in two: `items` are the committed short-lived context layer for
-still-open work, while `log` is the durable one-line history of finished work. GitHub issues,
-reconciled through `valerie` and `doob`, are the active-work source of truth. Non-Valerie
-skills should use the local SQLite database via `handoff-db` plus HANDOFF YAML, never `doob`
-directly. The scripted bridge from HANDOFF into the backlog is `handoff-reconcile`; use that
-instead of reconstructing `doob` commands by hand. Project state (build, tests, branch) lives separately in
+still-open work, while `log` is the durable one-line history of finished work. Use the local
+SQLite database via `handoff-db` plus HANDOFF YAML; do not call a backlog provider directly.
+The scripted bridge from HANDOFF into the configured backlog is `handoff-reconcile`; use that
+instead of reconstructing provider commands by hand. Project state (build, tests, branch) lives separately in
 `.ctx/HANDOFF.<name>.<base>.state.yaml` — generated, never committed. A rendered reference doc
 is also written to `.ctx/HANDOFF.md`.
 
@@ -117,20 +116,19 @@ handoff-db upsert --project <project> --handoff <path-to-HANDOFF.yaml>
 
 If the script is not found or exits non-zero, skip and note it in output.
 
-Do not call `doob` from this skill. `valerie` owns `doob` and GitHub issue sync.
+Do not call `doob` or GitHub directly from this skill.
 
 ### 6b. Reconcile open HANDOFF items into the backlog
 
-Run the scripted Valerie bridge:
+Run the scripted backlog bridge:
 
 ```bash
 handoff-reconcile sync --project <project> --handoff <path-to-HANDOFF.yaml>
 ```
 
 This is required. A handoff update is not complete until every open or blocked HANDOFF item has
-been reconciled into the configured `doob` backend through this command. Do not recreate this
-flow with ad hoc `doob todo add` / `doob todo list` commands unless you are debugging the
-reconciler itself.
+been reconciled into the configured backlog backend through this command. Do not recreate this
+flow with ad hoc provider commands unless you are debugging the reconciler itself.
 
 If the script is not found or exits non-zero, stop and report the failure instead of silently
 continuing.

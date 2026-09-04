@@ -11,17 +11,33 @@ permissionMode: acceptEdits
 maxTurns: 30
 effort: medium
 skills:
+  - ai-review
+  - cap
   - cargo-gate
   - ci-assist
+  - cleanup
+  - commit-msg
+  - eod
   - git-guard
+  - handdown
   - handoff
   - handon
   - handover
+  - handup
+  - harbor-adapter
+  - herald
   - hook-diagnostics
-  - onboard-atelier
+  - insights-audit
+  - merge
+  - minion
+  - onboard
   - project-pulse
+  - sadd
+  - self-review
   - sentinel-autofixer
-  - valerie
+  - triage
+  - using-gkg
+  - using-rslm
 ---
 
 You are workshop — a full-suite atelier test agent. All atelier skills are preloaded.

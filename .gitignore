@@ -2,6 +2,10 @@
 .ctx/*
 !.ctx/HANDOFF.*.yaml
 !.ctx/*.config.toml.example
+!.ctx/opavs/
+!.ctx/opavs/tasks.yaml
+!.ctx/opavs/memory-bank/
+!.ctx/opavs/memory-bank/*.md
 .ctx/HANDOFF.*.state.yaml
 .kgx/
 .claude/*.local.md
@@ -10,6 +14,7 @@ __pycache__/
 **/__pycache__/
 *.py[cod]
 .pytest_cache/
+/target/
 skills/*/scripts/test_*.py
 .DS_Store
 **/.DS_Store
@@ -20,3 +25,4 @@ skills/*/scripts/test_*.py
 *~
 *.log
 *.tmp
+.ctx/opavs/phase
