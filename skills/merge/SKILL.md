@@ -22,12 +22,12 @@ git push 2>&1
 
 Common rejection reasons:
 
-| Output contains | Cause | Action |
-|---|---|---|
-| `non-fast-forward` | Remote has commits you don't have | Fetch and integrate (continue below) |
-| `rejected ... (fetch first)` | Same as above | Fetch and integrate (continue below) |
-| `rejected ... (stale info)` | Force-push needed (feature branch only) | Ask user before force-pushing |
-| `Permission denied` | Auth failure | Check SSH key / 1Password agent |
+| Output contains              | Cause                                   | Action                               |
+| ---------------------------- | --------------------------------------- | ------------------------------------ |
+| `non-fast-forward`           | Remote has commits you don't have       | Fetch and integrate (continue below) |
+| `rejected ... (fetch first)` | Same as above                           | Fetch and integrate (continue below) |
+| `rejected ... (stale info)`  | Force-push needed (feature branch only) | Ask user before force-pushing        |
+| `Permission denied`          | Auth failure                            | Check SSH key / 1Password agent      |
 
 **For non-fast-forward rejections — assess the divergence:**
 
@@ -53,6 +53,7 @@ git log --oneline main..HEAD
 ```
 
 Output shows:
+
 - Current branch and tracking status
 - Commits that will be merged into `main`
 
@@ -85,10 +86,12 @@ git log --oneline --merges main..HEAD
 ```
 
 **If output is non-empty (branch contains merge commits):**
+
 - Use `git merge` — do not rebase
 - Per project convention: never rebase branches with merge commits
 
 **If output is empty (no merge commits):**
+
 - Merge is safe and recommended
 - Rebase is also safe if user explicitly requests it, but merge is the default
 
@@ -189,7 +192,7 @@ Never use `--no-verify`. Let hooks run. If a hook fails, report it — do not re
 
 One-line summary:
 
-```
+```text
 merged: <branch> -> main | <merge commit hash>
 ```
 

@@ -48,7 +48,7 @@ Use this as `<sha>` in the report filename.
 
 Compose a prompt with the following structure:
 
-```
+```text
 You are a senior engineer performing a security and correctness review of a code diff.
 
 Review the diff below and produce a structured report with findings grouped by severity:
@@ -75,7 +75,7 @@ DIFF:
 
 Ensure `.ai-logs/` directory exists, then write the report:
 
-```
+```text
 .ai-logs/ai-review-<sha>.md
 ```
 
@@ -84,17 +84,19 @@ Report format:
 ```markdown
 # AI Review — <sha>
 
-**Base:** main  **Date:** <date>
+**Base:** main **Date:** <date>
 
 ## CRITICAL
 
 ### <Finding title>
+
 **File:** `path/to/file.rs:42`
 **Finding:** ...
 **Detail:** ...
 **Recommendation:** ...
 
 ## HIGH
+
 ...
 
 ## Summary
@@ -108,7 +110,7 @@ If the directory does not exist, create it before writing.
 
 Print the findings summary to the terminal grouped by severity with counts:
 
-```
+```text
 SEVERITY   COUNT
 CRITICAL   0
 HIGH       2

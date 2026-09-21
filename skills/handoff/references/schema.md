@@ -113,18 +113,18 @@ Extend freely with project-specific facts (e.g. `rust_edition`, `open_prs`, `las
 
 ## File Layout
 
-| File                                          | Location | Committed | Purpose                        |
-| --------------------------------------------- | -------- | --------- | ------------------------------ |
-| `.ctx/HANDOFF.<name>.<base>.yaml`             | `.ctx/`  | yes       | Open-work context, items, log  |
-| `.ctx/HANDOFF.<name>.<base>.state.yaml`       | `.ctx/`  | no        | Project/package snapshot       |
-| `.ctx/HANDOFF.md`                             | `.ctx/`  | no        | Generated current-context doc  |
-| `.ctx/.initialized`                           | `.ctx/`  | no        | Init token (date of last init) |
-| `.ctx/handoff.<project>.config.toml`          | `.ctx/`  | no        | Local runtime vars (user-owned)|
-| `.ctx/handoff.<project>.config.toml.example`  | `.ctx/`  | yes       | Committed template for config  |
+| File                                         | Location | Committed | Purpose                         |
+| -------------------------------------------- | -------- | --------- | ------------------------------- |
+| `.ctx/HANDOFF.<name>.<base>.yaml`            | `.ctx/`  | yes       | Open-work context, items, log   |
+| `.ctx/HANDOFF.<name>.<base>.state.yaml`      | `.ctx/`  | no        | Project/package snapshot        |
+| `.ctx/HANDOFF.md`                            | `.ctx/`  | no        | Generated current-context doc   |
+| `.ctx/.initialized`                          | `.ctx/`  | no        | Init token (date of last init)  |
+| `.ctx/handoff.<project>.config.toml`         | `.ctx/`  | no        | Local runtime vars (user-owned) |
+| `.ctx/handoff.<project>.config.toml.example` | `.ctx/`  | yes       | Committed template for config   |
 
 `.gitignore` is managed by `handoff-init` between `# handoff-begin` / `# handoff-end` markers:
 
-```
+```text
 # handoff-begin
 .ctx/*
 !.ctx/HANDOFF.*.yaml
@@ -139,12 +139,14 @@ Do not edit this block manually — run `handoff-init --force` to regenerate it.
 ## Naming Convention
 
 `HANDOFF.<name>.<base>.yaml` where:
+
 - `<name>` = package/crate name from manifest (`Cargo.toml`, `pyproject.toml`, `go.mod`),
   fallback to dir basename
 - `<base>` = repo root dir name (e.g. `atelier`, `doob`, `crux`) — constant for all files
   in a repo
 
 Examples:
+
 - Root of repo `atelier` with package `atelier`: `.ctx/HANDOFF.atelier.atelier.yaml`
 - Crate `cruxai` in repo `crux`: `.ctx/HANDOFF.cruxai.crux.yaml`
 - Nested crate `handoff` in repo `atelier`: `.ctx/HANDOFF.handoff.atelier.yaml`

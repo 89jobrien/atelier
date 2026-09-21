@@ -85,7 +85,7 @@ Expected: Claude responds using skill content, not a generic answer.
 
 Start a fresh Claude session. Within the first response, Claude should output a sanctum summary:
 
-```
+```text
 1Password: 2 account(s) authed.
 Direnv chain: N .envrc file(s) found, N op:// refs.
 ```

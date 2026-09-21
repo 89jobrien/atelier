@@ -91,7 +91,7 @@ git -C ~/dev/<repo> log --oneline --since="4 hours ago"
 
 Write session state to the project memory file:
 
-```
+```text
 ~/.claude/projects/-Users-joe-dev-<repo>/memory/session_YYYY-MM-DD.md
 ```
 
@@ -136,7 +136,7 @@ clean tree, no stashes, single worktree).
 
 Append under `## Session Pulse` in today's daily note:
 
-```
+```text
 $HOME/Documents/Obsidian Vault/Daily Notes/YYYY-MM-DD.md
 ```
 

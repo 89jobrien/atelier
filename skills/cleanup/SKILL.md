@@ -18,6 +18,7 @@ git branch --merged main | grep -v '^\*\|main\|master'
 ```
 
 Filter out:
+
 - Current branch (marked with `*`)
 - main and master (never delete)
 
@@ -28,6 +29,7 @@ git branch -r --merged origin/main | grep -v 'origin/main\|origin/master'
 ```
 
 Filter out:
+
 - origin/main and origin/master (never delete)
 
 ## Step 3 — Verify Branches Are Truly Merged
@@ -57,7 +59,7 @@ close the PR first.
 
 Display a summary:
 
-```
+```text
 Local branches to delete:
   branch-1
   branch-2
@@ -72,7 +74,7 @@ Branches with open PRs (will be skipped):
 
 Ask for explicit confirmation:
 
-```
+```text
 Proceed with deletion? (yes/no)
 ```
 
@@ -88,7 +90,7 @@ git branch -d <branch>
 
 Report each deletion:
 
-```
+```text
 Deleted: branch-1
 Deleted: branch-2
 ```
@@ -101,7 +103,7 @@ git push origin --delete <branch>
 
 Report each deletion:
 
-```
+```text
 Deleted remote: origin/branch-3
 Deleted remote: origin/branch-4
 ```
@@ -116,7 +118,7 @@ git remote prune origin
 
 Summary:
 
-```
+```text
 cleanup complete:
   Local branches deleted: N
   Remote branches deleted: M
@@ -136,7 +138,7 @@ cleanup complete:
 
 If `git branch -d <branch>` fails (branch not fully merged):
 
-```
+```text
 Cannot delete <branch>: not fully merged
 ```
 

@@ -31,7 +31,7 @@ orchestrated by atelier's SessionStart hook.
 
 Single Rust binary with subcommands:
 
-```
+```text
 hooklings preflight [--emit json|table|both]   # run all enabled checks
 hooklings check <name>                          # run a single named check
 hooklings config show                           # print merged effective config
@@ -212,7 +212,7 @@ Dependency: `rusqlite` (pure-Rust, no libsqlite3-sys dynamic linking — use bun
 
 ### Markdown table (stdout)
 
-```
+```text
 | Check            | Status | Detail                     |
 |------------------|--------|----------------------------|
 | detect_shell     | PASS   | nu 0.102.0                 |
@@ -246,13 +246,13 @@ when it is on PATH, falling back to the current navigator hint if not installed.
 3. `crates/cruxx-agentic/src/lib.rs` — register sqlite handlers in the default registry
 4. `Cargo.toml` — add `rusqlite = { version = "...", features = ["bundled"] }`
 
-### No changes to `cruxx-script`, `cruxx-core`, or other crates.
+### No changes to `cruxx-script`, `cruxx-core`, or other crates
 
 ---
 
 ## hooklings Workspace Structure
 
-```
+```text
 hooklings/
 ├── Cargo.toml                  # workspace
 ├── crates/
@@ -279,7 +279,7 @@ hooklings/
 
 ## Status Enum
 
-```
+```text
 Pass  — check succeeded
 Warn  — check ran but found a non-fatal issue (missing optional tool, stale todo)
 Fail  — check ran and found a blocking issue

@@ -58,7 +58,7 @@ If this fails: 1Password is not authed. Commits will fail with signing error.
 
 Present recommendation:
 
-```
+```text
 STRATEGY RECOMMENDATION
 Branch has merge commits:  NO  →  rebase is safe (but merge also fine)
 Branch has merge commits:  YES →  USE MERGE, do not rebase

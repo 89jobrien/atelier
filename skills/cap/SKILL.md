@@ -44,10 +44,12 @@ False positives (test fixtures, variable names, localhost IPs) — note them and
 ## Step 3 — Decide What to Stage
 
 **Stage:**
+
 - Source files, config, docs, skills, markdown
 - Files explicitly relevant to the work done
 
 **Do NOT stage:**
+
 - `.env`, `.env.*`, `*.key`, `*.pem`, `*.p12`, `*.pfx`
 - `*secret*`, `*credential*`, `*token*` (unless clearly non-sensitive, e.g. a test fixture file)
 - Lock files if they are the only change (unless asked)
@@ -64,13 +66,14 @@ git add <files>    # specific files only — never `git add -A` blindly
 
 Read the diff and produce a conventional commit message:
 
-```
+```text
 <type>(<scope>): <what changed and why>
 ```
 
 Types: `feat`, `fix`, `docs`, `chore`, `refactor`, `test`, `style`, `ci`
 
 Rules:
+
 - One line, ≤72 chars
 - Past tense ("add", "fix", "remove") — not "adding", "fixed"
 - Scope = affected component/skill/crate (omit if unclear)
@@ -100,7 +103,7 @@ git push -u origin $(git branch --show-current)
 
 One-line summary:
 
-```
+```text
 capped: <N> files | <commit hash> | <branch> -> origin
 ```
 

@@ -72,17 +72,18 @@ Never apply clippy fixes to files the user hasn't touched in this session withou
 
 ## Common Failure Patterns
 
-| Symptom | Stage | Fix |
-|---------|-------|-----|
-| `error[E0...]: expected...` | check/build | Fix the type/borrow error |
-| `warning: ... [-D warnings]` | clippy | Fix or `#[allow(clippy::...)]` with justification |
-| `left behind by rustfmt` | fmt | `cargo fmt` then re-run gate |
-| `test ... FAILED` | test | Investigate failing test — do not skip |
-| `xtask: No such subcommand` | xtask | Fall back to manual stage sequence |
+| Symptom                      | Stage       | Fix                                               |
+| ---------------------------- | ----------- | ------------------------------------------------- |
+| `error[E0...]: expected...`  | check/build | Fix the type/borrow error                         |
+| `warning: ... [-D warnings]` | clippy      | Fix or `#[allow(clippy::...)]` with justification |
+| `left behind by rustfmt`     | fmt         | `cargo fmt` then re-run gate                      |
+| `test ... FAILED`            | test        | Investigate failing test — do not skip            |
+| `xtask: No such subcommand`  | xtask       | Fall back to manual stage sequence                |
 
 ## Minibox xtask Profile
 
 In `~/dev/minibox`, `cargo xtask pre-commit` is defined to run:
+
 - fmt-check
 - clippy (`--workspace -D warnings`)
 - release build (`--target x86_64-unknown-linux-musl` for VPS target)
@@ -93,7 +94,7 @@ It does NOT cross-compile by default — cross-compile is gated in CI only.
 
 Always surface stage results in this structure after gate completion:
 
-```
+```text
 STAGE     RESULT   NOTES
 fmt       PASS
 clippy    FAIL     3 warnings promoted to errors (see below)

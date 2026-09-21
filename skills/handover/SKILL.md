@@ -25,9 +25,11 @@ Resolve the target file in this order:
 1. **Explicit path argument** — accept only if filename matches `HANDOFF.*.{yaml|json|md}` (case-insensitive).
    Reject any other filename with: `error: only HANDOFF.*.{yaml|json|md} files are accepted`.
 2. **No argument** — use `handoff-detect` to find the file for the current directory:
+
    ```bash
    handoff-detect
    ```
+
    If `handoff-detect` is not on PATH, fall back to globbing `.ctx/` for `HANDOFF.*.yaml`.
    If exit code 2 (no file exists), report: `no HANDOFF file found in this repo` and stop.
 
@@ -37,13 +39,13 @@ Never read arbitrary files. Never accept paths that don't match the naming patte
 
 Controlled by optional flags (default: all modes run):
 
-| Flag | Output |
-|---|---|
-| *(none)* | Full report + all diagrams |
-| `--report` | Prose summary only |
-| `--diagrams` | All diagrams only |
-| `--items` | Item table + status flowchart only |
-| `--log` | Session log + sequence diagram only |
+| Flag         | Output                              |
+| ------------ | ----------------------------------- |
+| _(none)_     | Full report + all diagrams          |
+| `--report`   | Prose summary only                  |
+| `--diagrams` | All diagrams only                   |
+| `--items`    | Item table + status flowchart only  |
+| `--log`      | Session log + sequence diagram only |
 
 ## Output File
 
@@ -56,7 +58,8 @@ mkdir -p <repo-root>/.ctx
 ```
 
 After writing, print a single confirmation line to the user:
-```
+
+```text
 wrote .ctx/HANDOVER.md
 ```
 
@@ -77,7 +80,7 @@ Emit sections in this order, omitting any section where data is absent:
 Scan all items for `extra` entries with `type: human-edit` and no `reviewed` field. If any exist,
 emit this section before everything else:
 
-```
+```text
 ## Review on Wake
 
 - minibox-4 "Handler Coverage" — human edited `status` → `done` on 2026-04-03
@@ -115,13 +118,13 @@ below. Record the fallback in a comment at the top of the Diagrams section:
 
 The script emits up to five diagram types, each gated on having sufficient data:
 
-| Name | Type | Gate |
-|------|------|------|
-| `dependency` | flowchart TD | items with inferred deps |
-| `burn` | pie | ≥3 items |
-| `velocity` | xychart-beta bar | ≥2 log entries, ≥1 completed item |
-| `hotspots` | xychart-beta bar | ≥3 items with files, ≥3 distinct files |
-| `blocked` | flowchart TD | blocked items exist |
+| Name         | Type             | Gate                                   |
+| ------------ | ---------------- | -------------------------------------- |
+| `dependency` | flowchart TD     | items with inferred deps               |
+| `burn`       | pie              | ≥3 items                               |
+| `velocity`   | xychart-beta bar | ≥2 log entries, ≥1 completed item      |
+| `hotspots`   | xychart-beta bar | ≥3 items with files, ≥3 distinct files |
+| `blocked`    | flowchart TD     | blocked items exist                    |
 
 Each is a fenced Mermaid block with a `### <Name>` header. Only non-empty diagrams are included.
 
@@ -139,7 +142,7 @@ Apply these rules to **every node label**:
 
 #### 1. Burn (pie) — gate: ≥3 items
 
-```
+```text
 pie title Work Distribution
   "done" : 7
   "open" : 3
@@ -152,7 +155,7 @@ Skip slices with count 0.
 
 x-axis = dates from log (sorted), y-axis = items completed per date.
 
-```
+```text
 xychart-beta
   title "Items Completed"
   x-axis ["2026-04-03", "2026-04-05"]
@@ -164,7 +167,7 @@ xychart-beta
 
 Top 8 files by item reference count. Use basename; disambiguate duplicates with parent dir.
 
-```
+```text
 xychart-beta
   title "File Hotspots"
   x-axis ["handler.rs", "ci.yml", "todos.rs"]
@@ -186,7 +189,7 @@ After resolving the HANDOFF file, derive the state file path by appending `.stat
 (e.g. `HANDOFF.atelier.atelier.yaml` → `HANDOFF.atelier.atelier.state.yaml`). Read it if it
 exists. This file holds build/tests/branch/notes — it is not in HANDOFF.yaml itself.
 
-```
+```text
 <repo-root>/.ctx/HANDOFF.<name>.<base>.state.yaml   # project snapshot — may not exist
 <repo-root>/.ctx/HANDOFF.<name>.<base>.yaml         # tasks/items/log
 ```
@@ -198,11 +201,13 @@ If the state file is absent, omit the State section from output rather than gues
 Read with the Read tool and extract fields manually — do not shell out to a YAML parser.
 
 From `HANDOFF.yaml`:
+
 - `items[*].{id, priority, status, title, files, extra}`
 - `log[*].{date, summary, commits}`
 - `updated`
 
 From `.ctx/HANDOFF.<name>.<base>.state.yaml`:
+
 - `build`, `tests`, `branch`, `notes`
 
 For `.json`, same approach via Read tool.

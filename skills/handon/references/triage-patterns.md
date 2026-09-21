@@ -4,11 +4,11 @@
 
 Use these signals when inferring priority from freeform `HANDOFF.md` text:
 
-| Signal words | Inferred priority |
-|---|---|
-| "broken", "fails", "segfault", "panic", "security", "blocked", "urgent", "can't deploy" | P0 |
-| "fix", "implement", "specific file mentioned + known fix", "small change", "refactor X" | P1 |
-| "explore", "consider", "nice to have", "someday", "low priority", "when time permits" | P2 |
+| Signal words                                                                            | Inferred priority |
+| --------------------------------------------------------------------------------------- | ----------------- |
+| "broken", "fails", "segfault", "panic", "security", "blocked", "urgent", "can't deploy" | P0                |
+| "fix", "implement", "specific file mentioned + known fix", "small change", "refactor X" | P1                |
+| "explore", "consider", "nice to have", "someday", "low priority", "when time permits"   | P2                |
 
 When uncertain between P0 and P1: prefer P0. When uncertain between P1 and P2: prefer P1.
 Never over-triage P2 items — they should be delegatable without user review.
@@ -48,7 +48,7 @@ Stop and surface to user when ANY of these occur:
 
 Each P2 subagent must receive an explicit task description. Template:
 
-```
+```text
 Task: <title from HANDOFF item>
 Description: <description from HANDOFF item>
 Files: <files from HANDOFF item, if any>
@@ -74,7 +74,7 @@ ls ~/dev/*/HANDOFF.*.yaml 2>/dev/null
 
 Triage each repo's HANDOFF independently. Surface a combined report:
 
-```
+```text
 ## Workspace Triage — ~/dev
 
 ### minibox
@@ -101,7 +101,7 @@ When surfacing `human-edit` entries for review:
 
 Example output:
 
-```
+```text
 ## Review on Wake
 
 - minibox-4 "Handler Coverage" — human edited `status` → `done` on 2026-04-03
@@ -116,12 +116,12 @@ After presenting: "Acknowledged. Proceeding to P0 triage."
 
 When SQLite status differs from YAML status for the same item:
 
-| YAML status | SQLite status | Resolution |
-|---|---|---|
-| open | done | Trust SQLite — suppress the item in memory and prune it on next write |
-| done | open | Treat as discrepancy — prefer keeping it closed unless user confirms reopen |
-| open | blocked | Trust SQLite — more recent signal |
-| blocked | open | Trust YAML — SQLite may not have the blocker info |
+| YAML status | SQLite status | Resolution                                                                  |
+| ----------- | ------------- | --------------------------------------------------------------------------- |
+| open        | done          | Trust SQLite — suppress the item in memory and prune it on next write       |
+| done        | open          | Treat as discrepancy — prefer keeping it closed unless user confirms reopen |
+| open        | blocked       | Trust SQLite — more recent signal                                           |
+| blocked     | open          | Trust YAML — SQLite may not have the blocker info                           |
 
 General rule: trust SQLite for resolved/blocked state when it reflects newer tool activity.
 Use YAML `items` for extra local context on work that is still open. YAML is not the canonical
@@ -131,7 +131,7 @@ backlog. The YAML `log` is durable history. Do not write back to YAML here.
 
 Report cleanly and stop:
 
-```
+```text
 ## Handoff Triage — <repo>
 
 All items are done or parked. No action needed.
@@ -147,7 +147,7 @@ Offer to create new items if the user has work in mind.
 
 Never attempt blocked items. Always report the blocker verbatim:
 
-```
+```text
 ## P0 — BLOCKED
 
 - minibox-3 "Publish crate to crates.io"

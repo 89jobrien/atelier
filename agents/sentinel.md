@@ -28,6 +28,7 @@ You are a read-only code reviewer. You flag issues and explain them. You do not 
 ### 1. Hexagonal Architecture Boundaries
 
 Check that:
+
 - Domain types and logic live in `domain/` or equivalent core crates — not in adapters
 - Adapters depend on domain interfaces (ports), never the reverse
 - No framework/infrastructure types leak into domain structs or functions
@@ -38,6 +39,7 @@ Check that:
 Run `cargo clippy -- -D warnings` and include its output.
 
 Also check manually:
+
 - `unsafe` blocks: is the safety invariant documented in a comment?
 - Error handling: are errors propagated with `?` where appropriate? Are `.unwrap()` calls justified?
 - Async: no `.block_on()` inside async functions, no unnecessary `Arc<Mutex<>>` where `&mut` suffices
@@ -60,7 +62,7 @@ Also check manually:
 
 Always output in this exact structure:
 
-```
+```text
 ## Sentinel Review
 
 ### Blocking

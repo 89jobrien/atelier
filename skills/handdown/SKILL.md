@@ -74,6 +74,7 @@ title (e.g. "Depends on rascal-1"), mark B's item with a `discovery` entry:
 **Cross-project dependencies not yet noted**: Scan all open items' `description` and
 `extra[].note` for references to other projects' item IDs. If a dependency exists but no
 `extra` entry of type `discovery` mentions it yet, create one on both sides:
+
 - The dependent item: "Depends on <other-id> — <short title of that item>"
 - The dependency item: "Unblocks <dependent-id> in <project>"
 
@@ -114,11 +115,11 @@ extra:
 
 Entry type guide:
 
-| Type        | When to use                                                              |
-| ----------- | ------------------------------------------------------------------------ |
-| `discovery` | Cross-project dependency or unblocking relationship newly identified     |
-| `escalation`| Item identified as highest-priority in cross-project analysis            |
-| `note`      | General analysis context — confirmed blocker, recommended next, caveat   |
+| Type         | When to use                                                            |
+| ------------ | ---------------------------------------------------------------------- |
+| `discovery`  | Cross-project dependency or unblocking relationship newly identified   |
+| `escalation` | Item identified as highest-priority in cross-project analysis          |
+| `note`       | General analysis context — confirmed blocker, recommended next, caveat |
 
 ### 5. Write log entry
 
@@ -172,7 +173,7 @@ repo's commit — do not block the others.
 After all writes and commits, output a structured report following the format in
 `references/HANDDOWN.template.json`. The rendered form is:
 
-```
+```text
 ## handdown — <cwd> (<date>)
 
 ### <project-name>

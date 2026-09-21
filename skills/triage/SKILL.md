@@ -1,6 +1,7 @@
 ---
 name: triage
-description: This skill should be used when the user asks to "triage", "what needs fixing",
+description:
+  This skill should be used when the user asks to "triage", "what needs fixing",
   "what's broken", "prioritize issues", "run triage", or wants a P0/P1/P2 issue breakdown
   across one or more repos.
 ---
@@ -32,15 +33,15 @@ tracker for this workspace.
 
 ### 3. Categorize P0/P1/P2
 
-| Priority | Criteria |
-|----------|----------|
-| P0 | broken, fails, blocked, urgent, security, CI red |
-| P1 | specific file + known fix, test failing with known cause |
-| P2 | enhancements, cleanup, anything safe to defer |
+| Priority | Criteria                                                 |
+| -------- | -------------------------------------------------------- |
+| P0       | broken, fails, blocked, urgent, security, CI red         |
+| P1       | specific file + known fix, test failing with known cause |
+| P2       | enhancements, cleanup, anything safe to defer            |
 
 Merge HANDOFF items and GitHub issues into a single prioritized list. Present summary:
 
-```
+```text
 ## Triage — <repo>
 
 P0 (act now):

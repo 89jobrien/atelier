@@ -1,3 +1,5 @@
+//! Exercises the Atelier command-line interface through end-to-end smoke tests.
+
 use std::process::Command;
 
 #[test]

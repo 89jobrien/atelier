@@ -119,7 +119,7 @@ Run each configuration the agreed number of times. Collect all reward scores.
 Compute and report results as **mean ± sample SEM** (not std). The overlap criterion for
 parity is:
 
-```
+```text
 max(harbor_runs) >= min(original_runs)  AND  max(original_runs) >= min(harbor_runs)
 ```
 
@@ -139,7 +139,7 @@ Write `parity_experiment.json` in `adapters/{adapter-name}/`:
   "metrics": [
     {
       "original": 0.72,
-      "harbor": 0.70,
+      "harbor": 0.7,
       "original_runs": 3,
       "harbor_runs": 3
     }

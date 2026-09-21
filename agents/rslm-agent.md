@@ -20,7 +20,7 @@ eval harness work, Rhai script patterns, provider integration, and bench cycles.
 
 ## Workspace
 
-```
+```text
 /Users/joe/dev/rslm/
   crates/
     rslm-core/      — RLM loop, Rhai engine (rlm.rs, env.rs, protocol.rs)
@@ -76,12 +76,12 @@ actual model output first (`--verbose` on a manual query) before editing the gol
 
 Full API reference, CLI flags, all Rhai built-ins, error types, and workflow patterns:
 
-```
+```text
 docs/assets/rslm.ref.md
 ```
 
 Rhai script patterns (grep-fallback, recursive split, store hybrid, chunk enumeration):
 
-```
+```text
 skills/using-rslm/references/rhai-patterns.md
 ```

@@ -22,7 +22,7 @@ See `references/hooks-registry.md` for the full hook inventory, failure causes, 
 
 To list currently loaded hooks, run in Claude Code:
 
-```
+```text
 /hooks
 ```
 
@@ -69,9 +69,11 @@ When a hook blocks a commit unexpectedly:
 
 1. Do NOT modify test/doc content to work around the hook
 2. Run the hook chain with verbose output to identify the exact pattern match:
+
    ```bash
    bash -x $HOME/.claude/hooks/<hook-name>.sh < /dev/null 2>&1 | head -30
    ```
+
 3. Add a minimum exclusion to the allowlist for the matched path
 4. Never guess which hook is the culprit — identify it first
 
@@ -87,13 +89,13 @@ the debug output. The `rtk gain` command shows cumulative token savings from the
 
 ## Common Hook Issues
 
-| Hook | Symptom | Fix |
-|---|---|---|
-| `rtk-rewrite.sh` | "rtk: command not found" | `which rtk` — reinstall via dotfiles |
-| `pre-tool-course-correct.py` | Blocks every Bash call | Check `course-correct-rules.json` for overly broad rules |
-| `post-edit-cargo-fmt.nu` | "nu: command not found" | `which nu` — install via mise |
-| `post-edit-cargo-check.nu` | Runs after every edit (slow) | Expected behavior — check output for actual errors |
-| `op-resolver-startup.sh` | "op: not authed" | `op account list` — re-auth 1Password |
+| Hook                         | Symptom                      | Fix                                                      |
+| ---------------------------- | ---------------------------- | -------------------------------------------------------- |
+| `rtk-rewrite.sh`             | "rtk: command not found"     | `which rtk` — reinstall via dotfiles                     |
+| `pre-tool-course-correct.py` | Blocks every Bash call       | Check `course-correct-rules.json` for overly broad rules |
+| `post-edit-cargo-fmt.nu`     | "nu: command not found"      | `which nu` — install via mise                            |
+| `post-edit-cargo-check.nu`   | Runs after every edit (slow) | Expected behavior — check output for actual errors       |
+| `op-resolver-startup.sh`     | "op: not authed"             | `op account list` — re-auth 1Password                    |
 
 ## Verifying Hook Registration
 

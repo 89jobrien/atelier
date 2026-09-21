@@ -35,16 +35,19 @@ Sentinel reports contain three categories:
 1. Read the sentinel report from the current conversation or ask the user to paste it
 2. Extract all suggestion-level items
 3. Present a dry-run diff of proposed changes:
-   ```
+
+   ```text
    SUGGESTION 1: [description]
    File: src/handler.rs:42
    - old code
    + new code
    ```
+
 4. Ask: "Apply N suggestions? (yes/no/select)"
 5. If yes: apply all changes, run `cargo check --workspace` to verify
 6. If select: apply only confirmed items
 7. Commit all applied fixes in one batch commit:
+
    ```bash
    git add -A && git commit -m "fix: apply sentinel suggestion-level fixes"
    ```

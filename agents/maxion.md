@@ -49,7 +49,7 @@ implementer toward poor approaches.
 
 ## Output format
 
-```
+```text
 ## Task Plan — [item id]: [title]
 
 **Scope:** one-line summary of what this covers

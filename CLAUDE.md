@@ -22,7 +22,7 @@ The post-commit hook is intentionally a no-op.
 
 ## Architecture
 
-```
+```text
 atelier/
 ├── .claude-plugin/plugin.json   # Plugin metadata
 ├── skills/                      # 27 procedural workflow skills

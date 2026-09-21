@@ -73,7 +73,7 @@ git diff HEAD~3..HEAD --numstat 2>/dev/null || git log --max-count=3 --numstat -
 
 Surface this as a compact **Git Context** block at the top of the triage output:
 
-```
+```text
 ## Git Context
 
 Branch: <current branch>
@@ -114,7 +114,7 @@ After locating the HANDOFF file, derive the state file path by appending `.state
 exists. Extract `branch`, `build`, `tests`, `notes`, `touched_files` and surface them in the
 triage header:
 
-```
+```text
 ## Handoff Triage — <path/to/repo>
 
 Branch: <branch> | Build: <build> | Tests: <tests>
@@ -146,7 +146,7 @@ entry with `type: human-edit` and no `reviewed` field (or `reviewed` is absent).
 
 Surface these first, regardless of item priority:
 
-```
+```text
 ## Review on Wake
 
 - [id] "[title]" — human edited `<field>` → `<value>` on <date>
@@ -201,7 +201,7 @@ Dispatch one subagent per P2 item (cap 5 concurrent). Each subagent must:
 
 After all work:
 
-```
+```text
 ## Handoff Triage — <path/to/repo>
 
 P0:

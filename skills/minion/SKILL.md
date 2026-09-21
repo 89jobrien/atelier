@@ -25,19 +25,19 @@ synthesize their results.
 
 ## When to Use a Minion
 
-| Situation | Use minion? |
-|---|---|
-| Quick read + summarize of 1–5 files | Yes |
-| Batch task across N independent items | Yes (one per item) |
-| Verify a condition (file exists, test passes, etc.) | Yes |
-| Transform or reformat content | Yes |
-| Complex multi-step implementation | No — use forge |
-| Code review | No — use sentinel or oxidizer |
-| Handoff / session management | No — use handoff/handon |
+| Situation                                           | Use minion?                   |
+| --------------------------------------------------- | ----------------------------- |
+| Quick read + summarize of 1–5 files                 | Yes                           |
+| Batch task across N independent items               | Yes (one per item)            |
+| Verify a condition (file exists, test passes, etc.) | Yes                           |
+| Transform or reformat content                       | Yes                           |
+| Complex multi-step implementation                   | No — use forge                |
+| Code review                                         | No — use sentinel or oxidizer |
+| Handoff / session management                        | No — use handoff/handon       |
 
 ## Dispatching a Single Minion
 
-```
+```text
 Agent(
   subagent_type: "atelier:minion",
   prompt: "<clear, self-contained task description>"
@@ -45,6 +45,7 @@ Agent(
 ```
 
 The prompt must be fully self-contained — minion has no prior context. Include:
+
 - What to do
 - Where to find inputs (file paths, glob patterns, commands to run)
 - What to return
@@ -53,7 +54,7 @@ The prompt must be fully self-contained — minion has no prior context. Include
 
 Send multiple `Agent` tool calls in a single message. Cap at 5 concurrent.
 
-```
+```text
 Agent(subagent_type: "atelier:minion", prompt: "Summarize /path/to/file-a.md")
 Agent(subagent_type: "atelier:minion", prompt: "Summarize /path/to/file-b.md")
 Agent(subagent_type: "atelier:minion", prompt: "Summarize /path/to/file-c.md")
@@ -61,7 +62,7 @@ Agent(subagent_type: "atelier:minion", prompt: "Summarize /path/to/file-c.md")
 
 ## Prompt Template
 
-```
+```text
 Task: <one sentence>
 
 Input: <file paths, commands, or data>

@@ -123,7 +123,7 @@ cp .ctx/reflect-<date>.md .ctx/logs/self-review/reflect-<date>.md
 
 Print a one-line confirmation:
 
-```
+```text
 self-review: wrote .ctx/logs/self-review/reflect-<date>.md
 ```
 

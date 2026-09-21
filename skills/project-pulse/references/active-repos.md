@@ -32,7 +32,7 @@ gh pr list --state open --limit 3  # open PRs (if gh available)
 
 ## Session Diff Format
 
-```
+```text
 REPO     BRANCH         SESSION  24H  7D   LAST COMMIT  STASHES  STATUS
 minibox  feat/gc-images +3       +5   113  3d ago       12       clean
 doob     main           0        +3   3    15h ago      4        clean

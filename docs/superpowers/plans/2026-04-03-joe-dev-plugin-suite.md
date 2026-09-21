@@ -64,7 +64,6 @@ JSON (plugin manifests and hook config), SKILL.md / agent.md conventions.
 - Create: `~/.claude/plugins/joe-dev/README.md`
 - Create: `~/.claude/plugins/joe-dev/.gitignore`
 - Create: directories for all skills and agents
-
 - [ ] **Step 1: Create directory tree**
 
 ```bash
@@ -101,7 +100,7 @@ Create `$HOME/.claude/plugins/joe-dev/plugin.json`:
 
 Create `$HOME/.claude/plugins/joe-dev/.gitignore`:
 
-```
+```text
 .claude/*.local.md
 ```
 
@@ -152,7 +151,7 @@ cc --plugin-dir ~/.claude/plugins/joe-secrets
 - `joe-secrets` must also be installed for the session-start op-resolver + handon chain.
 - All agents are thin wrappers; devkit must be installed and accessible.
 
-````
+````text
 
 - [ ] **Step 5: Verify structure**
 
@@ -223,7 +222,7 @@ Never skip `cargo xtask pre-commit` when it exists. It is the canonical gate.
 
 After running, present a structured summary:
 
-```
+```text
 STAGE      RESULT
 fmt        PASS
 clippy     PASS  (or: FAIL — 3 warnings promoted to errors)
@@ -252,7 +251,7 @@ It does NOT run `cargo test` by default. Add test stage separately if needed.
 Invoke before every commit on Rust projects. Pairs with `git-guard` — run cargo-gate
 first, then git-guard to confirm merge strategy before committing.
 
-````
+````text
 
 - [ ] **Step 2: Commit**
 
@@ -309,9 +308,9 @@ File: src/handler.rs:42
 
 - old code
 
-* new code
+- new code
 
-````
+````text
 4. Ask: "Apply N suggestions? (yes/no/select)"
 5. If yes: apply all changes, run `cargo check --workspace` to verify
 6. If select: apply only confirmed items
@@ -344,7 +343,7 @@ To generate a fresh sentinel report before auto-fixing, invoke the `sentinel` ag
 
 The sentinel agent will produce a structured report that this skill can consume.
 
-````
+````text
 
 - [ ] **Step 2: Commit**
 
@@ -399,7 +398,7 @@ To list currently loaded hooks, run in Claude Code:
 
 /hooks
 
-````
+````text
 
 To check hook failure logs from post-tool-track-failures.py:
 
@@ -425,11 +424,13 @@ Each entry contains: `timestamp`, `hook_name`, `exit_code`, `command`, `stderr`.
 1. Identify the hook name from the failure log
 2. Find the hook script path: `ls $HOME/.claude/hooks/`
 3. Run the hook directly with sample input:
+
    ```bash
    echo '{"tool_name": "Bash", "tool_input": {"command": "echo test"}}' | \
      bash $HOME/.claude/hooks/<hook-name>.sh
    echo "Exit: $?"
    ```
+
 4. Check stderr for error messages
 
 ## Hook Overhead
@@ -452,7 +453,7 @@ not directly measured, but `claude --debug` shows hook timing in the debug log.
 | post-edit-cargo-fmt.nu     | nu not on PATH         | `which nu`                         |
 | op-resolver-startup.sh     | 1Password not authed   | `op account list`                  |
 
-````
+````text
 
 - [ ] **Step 2: Commit**
 
@@ -529,7 +530,7 @@ If this fails: 1Password is not authed. Commits will fail with signing error.
 
 Present recommendation:
 
-```
+```text
 STRATEGY RECOMMENDATION
 Branch has merge commits:  NO  →  rebase is safe (but merge also fine)
 Branch has merge commits:  YES →  USE MERGE, do not rebase
@@ -565,7 +566,7 @@ Always run `cargo-gate` before `git-guard` on Rust projects:
 1. `cargo-gate` — validates the build is clean
 2. `git-guard` — confirms strategy and signs the commit
 
-````
+````text
 
 - [ ] **Step 2: Commit**
 
@@ -636,13 +637,13 @@ file <binary>
 
 Expected output for VPS binary:
 
-```
+```text
 <binary>: ELF 64-bit LSB executable, x86-64, statically linked
 ```
 
 Expected output for local binary:
 
-```
+```text
 <binary>: Mach-O 64-bit executable arm64
 ```
 
@@ -698,7 +699,7 @@ For canonical CI patterns, read from `~/dev/minibox/.github/workflows/`:
 ls ~/dev/minibox/.github/workflows/
 ```
 
-````
+````text
 
 - [ ] **Step 2: Commit**
 
@@ -746,7 +747,7 @@ Default active repos to check:
 ~/dev/mcpipe
 ~/dev/braid
 
-````
+````text
 
 Add or remove repos based on what was active in the current session.
 
@@ -766,7 +767,7 @@ gh pr list --state open --limit 3  # open PRs (if gh available)
 
 Compare against session-start state (if known) to produce a diff:
 
-```
+```text
 REPO        BRANCH          COMMITS THIS SESSION   OPEN PRS
 minibox     feat/gc-images  3 new commits          1 open
 devloop     main            0                      0
@@ -777,7 +778,7 @@ doob        fix/sync        1 new commit           0
 
 Write session state to the project memory file:
 
-```
+```text
 ~/.claude/projects/-Users-joe-dev-<repo>/memory/session_YYYY-MM-DD.md
 ```
 
@@ -807,7 +808,7 @@ type: project
 
 Append a section to today's daily note:
 
-```
+```text
 $HOME/Documents/Obsidian Vault/Daily Notes/YYYY-MM-DD.md
 ```
 
@@ -838,7 +839,7 @@ Use both for complete session-end coverage: pulse first (structured), herald sec
 After `project-pulse`, run `handoff` to write `HANDOFF.yaml` with actionable next steps.
 The two skills complement each other: pulse captures what happened, handoff captures what's next.
 
-````
+````text
 
 - [ ] **Step 2: Commit**
 
@@ -854,7 +855,6 @@ cd $HOME/.claude/plugins/joe-dev && git add -A && git commit -m "feat: add proje
 
 - Create: `~/.claude/plugins/joe-dev/skills/handoff/SKILL.md`
 - Create: `~/.claude/plugins/joe-dev/skills/handon/SKILL.md`
-
 - [ ] **Step 1: Write handoff SKILL.md**
 
 Create `$HOME/.claude/plugins/joe-dev/skills/handoff/SKILL.md`:
@@ -948,7 +948,7 @@ If yes:
 git add HANDOFF.yaml && git commit -m "chore: update handoff for session end"
 ```
 
-````
+````text
 
 - [ ] **Step 2: Write handon SKILL.md**
 
@@ -982,7 +982,7 @@ Scan for HANDOFF.yaml in:
 ~/dev/mcpipe
 ~/dev/braid
 
-````
+````text
 
 Also check the current working directory repo.
 
@@ -1007,7 +1007,7 @@ Sort by:
 
 Present as a brief orientation table:
 
-```
+```text
 SESSION ORIENTATION — 2026-04-03
 
 BLOCKERS
@@ -1038,7 +1038,7 @@ If no HANDOFF.yaml files are found:
 This skill is invoked automatically by the `joe-secrets` SessionStart hook after op-resolver
 completes. No manual trigger needed at session start — it fires on every new Claude session.
 
-````
+````text
 
 - [ ] **Step 3: Commit**
 
@@ -1057,7 +1057,6 @@ cd $HOME/.claude/plugins/joe-dev && git add -A && git commit -m "feat: add hando
 - Create: `~/.claude/plugins/joe-dev/agents/herald.md`
 - Create: `~/.claude/plugins/joe-dev/agents/conductor.md`
 - Create: `~/.claude/plugins/joe-dev/agents/oxidizer.md`
-
 - [ ] **Step 1: Write sentinel.md**
 
 Create `$HOME/.claude/plugins/joe-dev/agents/sentinel.md`:
@@ -1292,7 +1291,6 @@ cd $HOME/.claude/plugins/joe-dev && git add -A && git commit -m "feat: add all f
 - Create: `~/.claude/plugins/joe-secrets/skills/op-resolver/SKILL.md`
 - Create: `~/.claude/plugins/joe-secrets/hooks/hooks.json`
 - Create: `~/.claude/plugins/joe-secrets/hooks/op-resolver-startup.sh`
-
 - [ ] **Step 1: Create directory structure**
 
 ```bash
@@ -1320,7 +1318,7 @@ Create `$HOME/.claude/plugins/joe-secrets/plugin.json`:
 
 Create `$HOME/.claude/plugins/joe-secrets/.gitignore`:
 
-```
+```text
 .claude/*.local.md
 ```
 
@@ -1377,7 +1375,7 @@ grep -h "op://" <each envrc path>
 
 Report the chain:
 
-```
+```text
 DIRENV CHAIN (CWD → HOME)
   /Users/joe/dev/minibox/.envrc  — 3 op:// refs
   /Users/joe/dev/.envrc          — 1 op:// ref (source_up)
@@ -1407,7 +1405,7 @@ contains literal `op://` values (not resolved secrets), warn:
 
 ## Step 5: Report Summary
 
-```
+```text
 1PASSWORD AUTH     OK (2 accounts)
 DIRENV CHAIN       3 files found, 6 op:// refs total
 ACCOUNT CONFLICTS  None detected
@@ -1429,7 +1427,7 @@ LITERAL OP:// REFS None in current environment
 Never use item names in `op://` paths — they may not resolve correctly across accounts.
 Use `op item list --vault <vault>` to get exact item UUIDs.
 
-````
+````text
 
 - [ ] **Step 5: Write hooks.json**
 
@@ -1555,7 +1553,7 @@ Install alongside `joe-dev` for the full session-start experience.
 - 1Password CLI (`op`) installed and on PATH
 - `direnv` installed (optional — chain tracing degrades gracefully without it)
 
-````
+````text
 
 - [ ] **Step 8: Init git and commit**
 

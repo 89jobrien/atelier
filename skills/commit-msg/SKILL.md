@@ -40,7 +40,7 @@ scope usage, verbosity).
 
 Compose a prompt:
 
-```
+```text
 You are an expert at writing conventional commit messages.
 
 Based on the staged diff and recent commit history below, generate a commit message
@@ -69,7 +69,7 @@ STAGED DIFF:
 
 Display the generated message clearly:
 
-```
+```text
 Generated commit message:
 
   feat(handler): add streaming output for ephemeral containers
@@ -81,6 +81,7 @@ Commit with this message? [y/N/edit]
 ```
 
 Options:
+
 - `y` — commit immediately with the message
 - `N` (default) — abort, user will commit manually
 - `edit` — open the message in `$EDITOR` for modification, then confirm again

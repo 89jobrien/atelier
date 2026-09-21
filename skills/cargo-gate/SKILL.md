@@ -43,7 +43,7 @@ Never skip `cargo xtask pre-commit` when it exists. It is the canonical gate.
 
 After running, present a structured summary:
 
-```
+```text
 STAGE      RESULT
 fmt        PASS
 clippy     PASS  (or: FAIL — 3 warnings promoted to errors)

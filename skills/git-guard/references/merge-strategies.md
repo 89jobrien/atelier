@@ -2,13 +2,13 @@
 
 ## Decision Matrix
 
-| Condition | Strategy | Command |
-|-----------|----------|---------|
-| Branch has merge commits | Merge only | `git merge main` |
-| Branch has no merge commits, linear history | Rebase safe | `git rebase main` |
-| Branch is fully merged (no output from `git log main..HEAD`) | Nothing to do | — |
-| Detached HEAD | Cannot commit | `git checkout <branch>` first |
-| Dirty working tree | Cannot commit | `git stash` or commit changes |
+| Condition                                                    | Strategy      | Command                       |
+| ------------------------------------------------------------ | ------------- | ----------------------------- |
+| Branch has merge commits                                     | Merge only    | `git merge main`              |
+| Branch has no merge commits, linear history                  | Rebase safe   | `git rebase main`             |
+| Branch is fully merged (no output from `git log main..HEAD`) | Nothing to do | —                             |
+| Detached HEAD                                                | Cannot commit | `git checkout <branch>` first |
+| Dirty working tree                                           | Cannot commit | `git stash` or commit changes |
 
 **Hard rule:** never rebase a branch that contains merge commits. It rewrites history in
 ways that corrupt the merge topology and are hard to recover from.
@@ -104,7 +104,7 @@ Never force-push to `main`. Force-push to feature branches only with explicit in
 
 Present this after running all checks:
 
-```
+```text
 GUARD CHECK          RESULT
 Merge commits        NO    → rebase is safe
 Branch divergence    3 commits ahead of main

@@ -1,6 +1,7 @@
 ---
 name: sadd
-description: This skill should be used when the user asks to "run subagent-driven development",
+description:
+  This skill should be used when the user asks to "run subagent-driven development",
   "execute plan with subagents", "dispatch implementer agents", "use sdd workflow", "sadd",
   or wants to implement a plan using parallel subagents with spec and quality review loops.
 ---
@@ -16,6 +17,7 @@ fast iteration with no context pollution between tasks.
 ## When to Use
 
 Use sadd when:
+
 - An implementation plan with mostly-independent tasks exists
 - Work should happen in the current session (not handed off)
 - Tasks can be reviewed for spec compliance and code quality independently
@@ -54,16 +56,17 @@ For each task, in sequence:
 ### Wrap-Up
 
 After all tasks pass both reviews:
+
 1. Dispatch a final code reviewer over the entire implementation (all commits).
 2. Run `superpowers:finishing-a-development-branch`.
 
 ## Model Selection
 
-| Task type | Model |
-|---|---|
-| Isolated function, 1-2 files, clear spec | `haiku` (fast/cheap) |
-| Multi-file integration, pattern matching | `sonnet` (standard) |
-| Architecture, design, broad codebase | `opus` (most capable) |
+| Task type                                | Model                 |
+| ---------------------------------------- | --------------------- |
+| Isolated function, 1-2 files, clear spec | `haiku` (fast/cheap)  |
+| Multi-file integration, pattern matching | `sonnet` (standard)   |
+| Architecture, design, broad codebase     | `opus` (most capable) |
 
 ## Prompt Templates
 
@@ -76,6 +79,7 @@ Full prompt templates live in `references/`:
 ## Red Flags
 
 **Never:**
+
 - Start implementation on `main`/`master` without user consent.
 - Skip either review stage (spec compliance AND code quality both required).
 - Proceed past a review that found issues without fixing them.
@@ -85,6 +89,7 @@ Full prompt templates live in `references/`:
 - Skip re-review after a fix.
 
 **Always:**
+
 - Answer implementer questions before allowing them to proceed.
 - Verify implementer committed before dispatching reviewer.
 - Provide BASE_SHA and HEAD_SHA to the code quality reviewer.

@@ -89,7 +89,7 @@ inflation.
 
 Print a structured audit to stdout:
 
-```
+```text
 ## Insights Audit
 
 ### Misattributed tools

@@ -28,15 +28,19 @@ You run pipelines. You connect devkit → doob into a cohesive workflow. You do 
 When invoked before starting work or to get bearings mid-session:
 
 **Step 1: Health snapshot**
+
 ```bash
 devkit health
 ```
+
 Report: score, any blocking findings.
 
 **Step 2: Open blockers**
+
 ```bash
 doob todo list --status pending --priority 3 -p <repo-path>
 ```
+
 List blocking tasks. If none, say so explicitly.
 
 **Step 3: Report**
@@ -47,11 +51,13 @@ One-paragraph summary: what the repo looks like right now and what needs attenti
 When asked what's outstanding or to review the backlog:
 
 **Step 1: List all open todos**
+
 ```bash
 doob todo list --status pending -p <repo-path>
 ```
 
 **Step 2: Run council delta** (only if last council run was >4h ago or unknown)
+
 ```bash
 devkit council
 ```
@@ -64,23 +70,28 @@ Backlog table grouped by priority. Flag any council findings not yet captured as
 Execute each step and log what you did before moving to the next.
 
 **Step 1: Run council analysis**
+
 ```bash
 devkit council
 ```
+
 Parse: health score (0-100), findings per council role (strict_critic, creative_explorer, analyst, security_reviewer, performance_analyst).
 
 **Step 2: Create doob tasks from findings**
 
 For each finding:
+
 - If severity is blocking/critical → `doob todo add "<finding>" --priority 3 -p <repo-path> -t "sentinel,council"`
 - If severity is suggestion → `doob todo add "<finding>" --priority 1 -p <repo-path> -t "council"`
 
 Include in each task description: what was flagged, file/area, which council role flagged it.
 
 **Step 3: Run health check** (only if council score < 70)
+
 ```bash
 devkit health
 ```
+
 Parse additional findings. Create doob tasks for any new blockers not already captured.
 
 **Step 4: Report**
@@ -97,9 +108,11 @@ devkit ci-triage
 ```
 
 **Step 2: Create doob task**
+
 ```bash
 doob todo add "Fix CI: <failure summary>" --priority 3 -p <repo-path> -t "ci,blocking"
 ```
+
 Task description must include: what failed, probable cause, relevant files, suggested fix direction.
 
 **Step 3: Get health context**

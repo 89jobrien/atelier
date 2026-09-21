@@ -28,7 +28,7 @@ Bad: `Add daemon-side policy gate for mounts`, `Fix phased-deployment CI — HTT
 
 ### Priority → Item → Status flow
 
-```
+```text
 flowchart LR
   subgraph P0
     p0a[Auth Gate]
@@ -57,7 +57,7 @@ Use subgraphs only when there are ≥3 items per priority level. Otherwise use p
 
 ### Simple flow (few items)
 
-```
+```text
 flowchart LR
   P0[Auth Gate] --> Open
   P1a[CI Enforce] --> Open
@@ -69,7 +69,7 @@ flowchart LR
 
 ### Basic status machine with counts
 
-```
+```text
 stateDiagram-v2
   [*] --> Open : 9 items
   Open --> Done : completed
@@ -86,7 +86,7 @@ Annotate with real counts from the HANDOFF data.
 
 ### Session log timeline
 
-```
+```text
 sequenceDiagram
   participant Apr03 as 2026-04-03
   participant Apr02 as 2026-04-02
@@ -100,7 +100,7 @@ Use `as` alias to shorten date participant names. Keep Note text ≤4 words.
 
 ### With commit hashes (optional, when available)
 
-```
+```text
 sequenceDiagram
   participant Apr03 as 2026-04-03
   Note over Apr03: Bench fix 2b6e0d9
@@ -112,7 +112,7 @@ Include hash only for the most recent entry.
 
 ### Item → File relationship
 
-```
+```text
 erDiagram
   ITEM ||--o{ FILE : references
   ITEM {
@@ -141,7 +141,7 @@ Only emit when ≥6 items exist. Map:
 - X axis: P2 (low) → P0 (high)
 - Y axis: done/parked (inactive) → open/blocked (active)
 
-```
+```text
 quadrantChart
   title Items Status
   x-axis Low Priority --> High Priority
@@ -163,7 +163,7 @@ Map statuses: open → y=0.6–1.0, blocked → y=0.3–0.5, done/parked → y=0
 
 ### Mistake: Long node labels
 
-```
+```text
 flowchart LR
   A[Add daemon-side policy gate for mounts and privileged containers] --> Open
 ```
@@ -172,7 +172,7 @@ Fix: `A[Auth Gate] --> Open`
 
 ### Mistake: Newline in label
 
-```
+```text
 flowchart LR
   A["Auth\nGate"] --> Open
 ```
@@ -181,7 +181,7 @@ Fix: `A[Auth Gate] --> Open`
 
 ### Mistake: Colon in node ID
 
-```
+```text
 flowchart LR
   minibox-1[Auth Gate] --> Open
 ```
@@ -190,7 +190,7 @@ Fix: `minibox1[Auth Gate] --> Open` (use camelCase or underscore IDs)
 
 ### Mistake: Parentheses in label
 
-```
+```text
 flowchart LR
   A[Auth (Gate)] --> Open
 ```

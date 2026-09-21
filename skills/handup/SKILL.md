@@ -34,6 +34,7 @@ fd -t f -d 5 'HANDOFF\.(.*\.yaml|md)' "$CWD" --full-path 2>/dev/null \
 ```
 
 For each file found:
+
 - Read `items` list (YAML) or relevant sections (MD)
 - Filter to `status: open` or `status: blocked`
 - Find repo root: `git -C "$(dirname <file>)" rev-parse --show-toplevel 2>/dev/null`
@@ -58,7 +59,7 @@ notably high (>5 per project). They are supplementary context, not primary items
 
 For each distinct repo root found (or subdirectory if no `.git`), build a project block:
 
-```
+```text
 ### <project-name> — <absolute-path>
 Branch: <branch> | Build: <build> | Tests: <tests>   (omit if .ctx absent)
 
@@ -91,7 +92,12 @@ Schema:
       "build": "<clean|failing|unknown|null>",
       "tests": "<summary or null>",
       "items": [
-        { "id": "<id>", "priority": "<P0|P1|P2>", "status": "<status>", "title": "<title>" }
+        {
+          "id": "<id>",
+          "priority": "<P0|P1|P2>",
+          "status": "<status>",
+          "title": "<title>"
+        }
       ],
       "todos": ["<absolute-path>:<line>  <text>"]
     }
@@ -128,7 +134,7 @@ This preserves a timestamped history of every handup run across sessions.
 
 Output the full survey, then a recommendation block:
 
-```
+```text
 ## handup — <cwd> (<date>)
 
 <project blocks>

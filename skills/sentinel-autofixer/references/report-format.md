@@ -5,7 +5,7 @@
 A sentinel code review report contains three severity sections. All sections may not be
 present in every report — only emit sections that have findings.
 
-```
+```text
 ## Blocking
 
 [B1] src/handler.rs:42 — Missing error propagation: `unwrap()` on fallible op
@@ -30,11 +30,11 @@ present in every report — only emit sections that have findings.
 
 ## Severity Taxonomy
 
-| Severity | Auto-apply? | Requires user ack? | Description |
-|---|---|---|---|
-| **Blocking** | Never | Yes, before proceeding | Correctness, safety, or security issue |
-| **Suggestion** | Yes (with dry-run) | No (but show diff) | Style, lint, dead code, obvious cleanup |
-| **Observation** | No | No | Informational — complexity, patterns, FYI |
+| Severity        | Auto-apply?        | Requires user ack?     | Description                               |
+| --------------- | ------------------ | ---------------------- | ----------------------------------------- |
+| **Blocking**    | Never              | Yes, before proceeding | Correctness, safety, or security issue    |
+| **Suggestion**  | Yes (with dry-run) | No (but show diff)     | Style, lint, dead code, obvious cleanup   |
+| **Observation** | No                 | No                     | Informational — complexity, patterns, FYI |
 
 ## Parsing a Sentinel Report
 
@@ -51,7 +51,7 @@ Each item has a reference tag (`[B1]`, `[S1]`, etc.) used for selective applicat
 
 Present proposed suggestion-level changes in this format before applying:
 
-```
+```text
 SUGGESTION S1 — src/handler.rs:88
   - let result = process(x.clone());
   + let result = process(&x);
@@ -93,7 +93,7 @@ After applying all suggestions and committing:
 3. If yes: revert the specific suggestion and note it as incompatible
 4. Report the final state:
 
-```
+```text
 Applied: S1, S2, S3
 Committed: fix: apply sentinel suggestions (abc1234)
 Gate: PASS

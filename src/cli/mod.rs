@@ -1,3 +1,5 @@
+//! Defines command-line parsing and dispatch for the Atelier runtime.
+
 use std::{ffi::OsString, process::ExitCode};
 
 use clap::{Parser, Subcommand};
@@ -53,6 +55,7 @@ enum RepoHookCommand {
     PostCommit,
 }
 
+/// Parses the supplied command-line arguments and returns the resulting process exit code.
 pub fn try_run<I, T>(arguments: I) -> ExitCode
 where
     I: IntoIterator<Item = T>,

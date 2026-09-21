@@ -21,12 +21,14 @@ their definitions, usages, and relationships. Unlike `grep` or `rg`, which searc
 gkg understands code structure.
 
 **When to use gkg:**
+
 - Finding all usages of a symbol across a large codebase
 - Tracing the definition chain (where is `MyType` defined? what implements it?)
 - Understanding cross-module relationships
 - Exploring unfamiliar codebases quickly
 
 **When to use grep/rg instead:**
+
 - One-off text search in a few files
 - Pattern matching on specific keywords or strings
 - No preprocessing time available (gkg indexing takes seconds)
@@ -93,7 +95,7 @@ gkg context Agent
 
 gkg is accessible via MCP (through the `mcpipe` local proxy). The SSE endpoint is:
 
-```
+```text
 http://localhost:27495/mcp/sse
 ```
 
@@ -112,26 +114,33 @@ SSE endpoint.
 ### Scenario: Exploring the minibox codebase
 
 1. **Index the repo:**
+
    ```bash
    gkg index /Users/joe/dev/minibox
    ```
 
 2. **Search for the main Agent type:**
+
    ```bash
    gkg search "struct Agent"
    ```
+
    Output: file paths and line numbers of all Agent definitions and usages.
 
 3. **Get context on the Agent type:**
+
    ```bash
    gkg context Agent
    ```
+
    Output: the struct definition, its fields, and usage patterns.
 
 4. **Search for callers of a specific function:**
+
    ```bash
    gkg search "fn provision"
    ```
+
    Output: all references to the `provision` function.
 
 ## Performance & Limits

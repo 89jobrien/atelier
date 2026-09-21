@@ -81,6 +81,7 @@ fields and formats:
 - `claude_session_id`: capture from `$CLAUDE_SESSION_ID` env var if set; omit the field if unset
 - `summary`: one line, past tense
 - `commits`: use `{sha, branch}` object form for each commit — never bare hash strings:
+
   ```yaml
   commits:
     - sha: abc1234
@@ -167,7 +168,7 @@ and note the failure.
 
 Verify `.gitignore` has:
 
-```
+```text
 .ctx/*
 !.ctx/HANDOFF.*.yaml
 .ctx/HANDOFF.*.state.yaml

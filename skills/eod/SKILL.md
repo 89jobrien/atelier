@@ -43,6 +43,7 @@ done
 Dispatch one `atelier:minion` subagent per active repo, all in parallel (cap at 5 concurrent).
 
 Each subagent runs the full `atelier:handoff` workflow:
+
 1. `git branch --show-current && git log --oneline -5`
 2. `handoff-detect` to find HANDOFF.yaml path
 3. Read existing HANDOFF.yaml
@@ -65,6 +66,7 @@ changes, blocked items).
 ## Step 3 — Update Daily Note
 
 Run the `daily-update` skill workflow:
+
 - Get 24h git log across all active repos
 - Find or create today's note at `$HOME/Documents/Obsidian Vault/01_Daily/YYYY-MM-DD.md`
 - Append a new `---`-separated block — never overwrite existing blocks
@@ -76,7 +78,7 @@ Run the `daily-update` skill workflow:
 
 Print a concise summary:
 
-```
+```text
 EOD ritual complete.
   Active repos  — <list>
   Handoffs      — <N> committed, <M> flags
@@ -86,10 +88,10 @@ EOD ritual complete.
 
 ## Common Mistakes
 
-| Mistake | Fix |
-|---|---|
-| Running handoff sequentially | Always parallel — one subagent per repo |
-| Overwriting existing daily note blocks | Append only — existing blocks are immutable |
-| Skipping repos with no new commits | Only process repos active in the past 24h |
+| Mistake                                | Fix                                           |
+| -------------------------------------- | --------------------------------------------- |
+| Running handoff sequentially           | Always parallel — one subagent per repo       |
+| Overwriting existing daily note blocks | Append only — existing blocks are immutable   |
+| Skipping repos with no new commits     | Only process repos active in the past 24h     |
 | Committing `.ctx/HANDOFF.*.state.yaml` | State files are gitignored — never stage them |
-| Using `--no-verify` | Never — let hooks run, fix failures |
+| Using `--no-verify`                    | Never — let hooks run, fix failures           |

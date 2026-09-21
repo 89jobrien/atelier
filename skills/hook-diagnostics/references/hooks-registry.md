@@ -35,7 +35,7 @@ Active hooks across all sources. Update this file when hooks are added or remove
 
 Failures are written by `post-tool-track-failures.py` as JSON entries:
 
-```
+```text
 ~/.claude/hooks/failures/failures.jsonl
 ```
 

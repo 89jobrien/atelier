@@ -23,7 +23,7 @@ Personal dev workflow plugin — Rust gates, code review, CI, git safety, multi-
 
 ### Directory Structure
 
-```
+```text
 joe-dev/
 ├── plugin.json
 ├── README.md
@@ -95,7 +95,7 @@ Secrets, environment, and 1Password session management.
 
 ### Directory Structure
 
-```
+```text
 joe-secrets/
 ├── plugin.json
 ├── README.md

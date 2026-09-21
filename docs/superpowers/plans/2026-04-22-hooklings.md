@@ -75,7 +75,6 @@ markdown table to stdout. Config is layered TOML: global XDG + per-project overr
 - Create: `hooklings/Cargo.toml`
 - Create: `hooklings/crates/hooklings/Cargo.toml`
 - Create: `hooklings/crates/hooklings/src/main.rs`
-
 - [ ] **Step 1: Create the repo**
 
 ```bash
@@ -190,7 +189,6 @@ git push -u origin main
 
 - Create: `crates/hooklings/src/config.rs`
 - Create: `crates/hooklings/tests/config.rs`
-
 - [ ] **Step 1: Write failing tests first**
 
 Create `crates/hooklings/tests/config.rs`:
@@ -671,7 +669,6 @@ git push
 
 - Create: `crates/hooklings/src/emit.rs`
 - Create: `crates/hooklings/tests/emit.rs`
-
 - [ ] **Step 1: Write failing tests**
 
 Create `crates/hooklings/tests/emit.rs`:
@@ -931,7 +928,6 @@ git push
 - Create: `crates/hooklings/src/handlers/mod.rs`
 - Create: `crates/hooklings/src/handlers/env.rs`
 - Create: `crates/hooklings/tests/handlers_env.rs`
-
 - [ ] **Step 1: Write failing tests**
 
 Create `crates/hooklings/tests/handlers_env.rs`:
@@ -1167,7 +1163,6 @@ git push
 - Create: `crates/hooklings/src/handlers/handoff.rs`
 - Create: `crates/hooklings/src/handlers/doob.rs`
 - Create: `crates/hooklings/tests/handlers_sqlite.rs`
-
 - [ ] **Step 1: Write failing tests for handoff and doob handlers**
 
 Create `crates/hooklings/tests/handlers_sqlite.rs`:
@@ -1789,7 +1784,6 @@ git push
 
 - Create: `hooklings/pipelines/default.crux`
 - Create: `hooklings/README.md`
-
 - [ ] **Step 1: Create default pipeline**
 
 Create `pipelines/default.crux`:
@@ -1887,7 +1881,7 @@ default = ".hooklings/ci.crux"
 
 atelier's SessionStart hook calls `hooklings preflight --emit both` when hooklings is on PATH.
 
-````
+````text
 
 - [ ] **Step 3: Commit**
 
@@ -1907,7 +1901,6 @@ git push
 - Create: `hooklings/fuzz/Cargo.toml`
 - Create: `hooklings/fuzz/fuzz_targets/config_parse.rs`
 - Create: `hooklings/fuzz/fuzz_targets/emit_table.rs`
-
 - [ ] **Step 1: Bootstrap fuzz crate**
 
 ```bash
