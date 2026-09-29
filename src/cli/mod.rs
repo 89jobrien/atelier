@@ -5,7 +5,7 @@ use std::{ffi::OsString, process::ExitCode};
 use clap::{Parser, Subcommand};
 
 #[derive(Debug, Parser)]
-#[command(name = "atelier")]
+#[command(name = "atelier", version)]
 #[command(about = "Generate and run Atelier harness integrations")]
 struct Cli {
     #[command(subcommand)]
