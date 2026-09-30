@@ -4,6 +4,8 @@ use std::{ffi::OsString, process::ExitCode};
 
 use clap::{Parser, Subcommand};
 
+use crate::AtelierError;
+
 #[derive(Debug, Parser)]
 #[command(name = "atelier", version)]
 #[command(about = "Generate and run Atelier harness integrations")]
@@ -56,11 +58,14 @@ enum RepoHookCommand {
 }
 
 /// Parses the supplied command-line arguments and returns the resulting process exit code.
-pub fn try_run<I, T>(arguments: I) -> ExitCode
+///
+/// Errors propagate to `main`, which prints them to stderr; the library never
+/// writes to the process streams itself so it stays testable in-process.
+pub fn try_run<I, T>(arguments: I) -> Result<ExitCode, AtelierError>
 where
     I: IntoIterator<Item = T>,
     T: Into<OsString> + Clone,
 {
     let _cli = Cli::parse_from(arguments);
-    ExitCode::SUCCESS
+    Ok(ExitCode::SUCCESS)
 }
