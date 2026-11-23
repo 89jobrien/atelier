@@ -25,7 +25,7 @@ change — no manual step needed after edits.
 atelier/
 ├── .claude-plugin/plugin.json   # Plugin manifest (name, version, skills, agents)
 ├── skills/                      # 12 skills — procedural markdown guides for Claude
-├── agents/                      # 5 agents — thin wrappers that delegate to devkit
+├── agents/                      # 9 agents — self-contained, no devkit dependency
 ├── bin/                         # handoff-detect, handoff-init, handoff-db, handoff-reconcile, migrate-handoff
 ├── docs/design.md               # Authoritative design spec
 └── justfile                     # Setup automation
@@ -57,14 +57,14 @@ are callable directly: `handoff-detect`, `handoff-init`, `handoff-db`, `handoff-
 
 ### Agents
 
-All agents are thin wrappers — domain logic lives in `devkit`. Do not embed behavior here.
+Agents call git, cargo, gh, and doob directly. None depends on `devkit`, which is not installed on every machine.
 
 | Agent       | Purpose                                                           |
 | ----------- | ----------------------------------------------------------------- |
 | `sentinel`  | Structured code review (hexagonal arch, Rust/Go conventions)      |
 | `forge`     | Primary dev companion: design, debug, refactor                    |
-| `herald`    | Cross-repo activity → Obsidian daily note                         |
-| `conductor` | devloop → doob → devkit workflow pipeline                         |
+| `herald`    | Cross-repo activity (git only) → Obsidian daily note              |
+| `conductor` | Review, health, CI triage → doob tasks (git, cargo, gh, doob)     |
 | `oxidizer`  | Rust-specific review (clippy, unsafe, edition 2024)               |
 | `minion`    | General-purpose parallel worker for independent subtasks          |
 | `maxion`    | Structured task planner for complex or ambiguous items            |
@@ -98,7 +98,8 @@ is the scripted bridge that captures open HANDOFF items into the authoritative `
 
 ## Key Design Rules
 
-- **Thin agents only** — agents delegate to `devkit`; no domain logic lives in `atelier/agents/`.
+- **No devkit dependency** — agents must work on a machine without `devkit`. Keep agent logic short;
+  reusable procedures belong in skills.
 - `.ctx/HANDOFF.state.yaml` is intentionally gitignored — it tracks local session state and appearing
   untracked in `git status` is normal, not a dirty tree.
 - **No duplicate hooks** — global hooks (`rtk-rewrite.sh`, `cargo-fmt.nu`, etc.) live in

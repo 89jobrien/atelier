@@ -1,9 +1,10 @@
 ---
 name: herald
 description: >
-  Cross-project knowledge synthesizer. Discovers active repos (24h git window), runs devkit
-  standup on each, synthesizes work into a narrative summary, and writes to the Obsidian daily
-  note. Use at end of day or when you want a cross-repo view of what happened.
+  Cross-project knowledge synthesizer. Discovers active repos (24h git window), gathers each
+  repo's commits and working-tree state with git, synthesizes work into a narrative summary, and
+  writes to the Obsidian daily note. Use at end of day or when you want a cross-repo view of what
+  happened.
 tools: Read, Bash, Write
 model: sonnet
 skills: herald-sync, obsidian-vault
@@ -63,10 +64,24 @@ Confirm resolved context:
 
 1. **Preflight** — resolve `vault`, `dev_dir`, and config vars; abort on failure
 2. **Check activity** — `git log --since=...` per repo; skip repos with zero commits
-3. **Run standup** — `devkit standup` on each active repo (in parallel if multiple)
+3. **Gather standup** — run the git standup below on each active repo (in parallel if multiple)
 4. **Synthesize** — one narrative spanning all repos, name cross-cutting themes
 5. **Write vault** — write/append to `$vault/YYYY-MM-DD.md`
 6. **Update memory** — persist any project state changes to `~/.claude/projects/*/memory/`
+
+## Standup
+
+For each active repo, collect the activity for the window with git alone:
+
+```bash
+git -C "$dev_dir/$repo" branch --show-current
+git -C "$dev_dir/$repo" log --since="$window" --no-merges --pretty=format:'%h %an %s'
+git -C "$dev_dir/$repo" log --since="$window" --no-merges --shortstat --format= | awk '{f+=$1; i+=$4; d+=$6} END {print f" files, +"i" -"d}'
+git -C "$dev_dir/$repo" status --short
+```
+
+Read the commit subjects as the record of what happened. Use `status --short` to report
+uncommitted work still in progress. Group repos with no commits in the window out of the narrative.
 
 ## Output
 
